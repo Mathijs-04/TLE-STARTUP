@@ -1,12 +1,62 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import {NavigationContainer} from "@react-navigation/native";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import HomeIcon from './iconComponents/HomeIcon';
+import PlantIcon from './iconComponents/PlantIcon';
+import InfoIcon from './iconComponents/InfoIcon';
+import HomeScreen from "./screens/HomeScreen";
+import GardenScreen from "./screens/GardenScreen";
+import InfoScreen from "./screens/InfoScreen";
+
+const Tab = createBottomTabNavigator();
+
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <AppNavigator/>
+  );
+}
+
+function AppNavigator() {
+  return (
+      <NavigationContainer>
+          <Tab.Navigator
+              id={1}
+              initialRouteName="Home"
+              screenOptions={{
+                  headerStyle: { backgroundColor: 'tomato' },
+                  tabBarStyle: { backgroundColor: '#fff' },
+                  tabBarActiveTintColor: '#000',
+              }}>
+              <Tab.Screen
+                  name="Home"
+                  component={HomeScreen}
+                  options={{
+                      tabBarIcon: ({ color, size }) => (
+                          <HomeIcon width={size} height={size} stroke={color} />
+                      ),
+                  }}
+              />
+              <Tab.Screen
+                  name="Garden"
+                  component={GardenScreen}
+                  options={{
+                      tabBarIcon: ({ color, size }) => (
+                          <PlantIcon width={size} height={size} stroke={color} />
+                      ),
+                  }}
+              />
+              <Tab.Screen
+                  name="Info"
+                  component={InfoScreen}
+                  options={{
+                      tabBarIcon: ({ color, size }) => (
+                          <InfoIcon width={size} height={size} stroke={color} />
+                      ),
+                  }}
+              />
+          </Tab.Navigator>
+      </NavigationContainer>
   );
 }
 
