@@ -1,10 +1,28 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import {Button, Pressable, StyleSheet, Text, View} from 'react-native';
 
-export default function InfoScreen() {
+function InfoScreen({navigation}) {
     return (
-        <View>
-            <Text>Info</Text>
+        <View style={styles.container}>
+
+            <Text>Planten Encyclopedie</Text>
+            <Text>2</Text>
+            <Button
+                title={'Home'}
+                onPress={() => navigation.navigate('Home')}
+            />
         </View>
-    );
+    )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'beige',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
+
+
+export default InfoScreen
