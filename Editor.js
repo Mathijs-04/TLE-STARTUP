@@ -14,20 +14,22 @@ import {
 
 const MATERIALS = {
     grass: { name: 'Grass', color: '#8BC34A' },
+    hedge: { name: 'Hedge', color: '#1a5700' },
     tiles: { name: 'Tiles', color: '#9E9E9E' },
     dirt: { name: 'Dirt', color: '#795548' },
     flowers: { name: 'Flowers', color: '#E91E63' },
     water: { name: 'Water', color: '#2196F3' },
-    wood: { name: 'Sand', color: '#d5ba0a' },
+    sand: { name: 'Sand', color: '#d5ba0a' },
 };
 
 const MATERIAL_CODES = {
     grass: 'G',
+    hedge: 'H',
     tiles: 'T',
     dirt: 'D',
     flowers: 'F',
     water: 'W',
-    wood: 'S',
+    sand: 'S',
     empty: 'E',
 };
 
@@ -109,7 +111,6 @@ export default function Editor({ navigation }) {
         Alert.alert('Copied', 'Exported JSON copied to clipboard!');
     };
 
-    // Add these functions inside your Editor component
     const eraseAll = () => {
         setGrid(prev => prev.map(row => row.map(cell => ({ ...cell, material: 'empty' }))));
     };
@@ -168,14 +169,20 @@ export default function Editor({ navigation }) {
                     keyboardType="numeric"
                     placeholder="Rows"
                     value={rows.toString()}
-                    onChangeText={(text) => setRows(parseInt(text) || 0)}
+                    onChangeText={(text) => {
+                        const value = Math.max(1, Math.min(15, parseInt(text) || 0));
+                        setRows(value);
+                    }}
                 />
                 <TextInput
                     style={styles.input}
                     keyboardType="numeric"
                     placeholder="Cols"
                     value={cols.toString()}
-                    onChangeText={(text) => setCols(parseInt(text) || 0)}
+                    onChangeText={(text) => {
+                        const value = Math.max(1, Math.min(15, parseInt(text) || 0));
+                        setCols(value);
+                    }}
                 />
                 <TouchableOpacity style={styles.gridButton} onPress={initializeGrid}>
                     <Text style={styles.gridButtonText}>New Grid</Text>
@@ -234,12 +241,13 @@ export default function Editor({ navigation }) {
                 </ScrollView>
 
                 {/* Action Buttons */}
-                <View style={styles.actionRow}><TouchableOpacity
-                    style={[styles.toolButton, mode === 'eraser' && styles.activeTool]}
-                    onPress={() => setMode('eraser')}
-                >
-                    <Text style={styles.toolText}>Erase</Text>
-                </TouchableOpacity>
+                <View style={styles.actionRow}>
+                    <TouchableOpacity
+                        style={[styles.toolButton, mode === 'eraser' && styles.activeTool]}
+                        onPress={() => setMode('eraser')}
+                    >
+                        <Text style={styles.toolText}>Erase</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.toolButton} onPress={eraseAll}>
                         <Text style={styles.toolText}>Erase All</Text>
                     </TouchableOpacity>
@@ -291,87 +299,109 @@ export default function Editor({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#fff' },
-    header: { padding: 8, alignItems: 'center' },
-    title: { fontSize: 20, fontWeight: '600', color: '#2E7D32' },
+    container: { flex: 1, backgroundColor: '#FFFFFF' },
+
+    header: { paddingVertical: 12, alignItems: 'center', backgroundColor: '#F8F8F8' },
+    title: { fontSize: 24, fontWeight: 'bold', color: '#4CAF50' },
     subtitle: { fontSize: 12, color: '#757575' },
 
     settingsRow: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 4,
+        paddingVertical: 8,
+        backgroundColor: '#F8F8F8'
     },
     input: {
         width: 60,
         height: 40,
-        borderColor: '#ccc',
+        borderColor: '#BDBDBD',
         borderWidth: 1,
-        borderRadius: 4,
+        borderRadius: 8,
         paddingHorizontal: 6,
-        marginHorizontal: 4,
-        fontSize: 12,
+        marginHorizontal: 6,
+        fontSize: 14,
+        backgroundColor: '#FFFFFF',
         textAlign: 'center'
     },
     gridButton: {
         backgroundColor: '#4CAF50',
-        paddingHorizontal: 10,
-        paddingVertical: 6,
-        borderRadius: 4
+        paddingHorizontal: 14,
+        paddingVertical: 8,
+        borderRadius: 8,
+        marginLeft: 6
     },
-    gridButtonText: { color: '#fff', fontSize: 12 },
+    gridButtonText: { color: '#FFFFFF', fontWeight: '600', fontSize: 14 },
 
-    gridContainer: { flex: 7, justifyContent: 'center', alignItems: 'center' },
+    gridContainer: { flex: 6, justifyContent: 'center', alignItems: 'center' },
     row: { flexDirection: 'row' },
-    cell: { width: 25, height: 25, borderWidth: 0.5 },
+    cell: {
+        width: 28,
+        height: 28,
+        borderWidth: 1,
+        borderColor: '#E0E0E0',
+        borderRadius: 4,
+    },
     emptyGrid: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-    emptyText: { color: '#9E9E9E' },
+    emptyText: { color: '#BDBDBD', fontSize: 14 },
 
     toolbarContainer: {
-        paddingVertical: 4,
-        backgroundColor: '#F0F0F0',
+        paddingVertical: 8,
+        backgroundColor: '#EEEEEE',
+        borderTopWidth: 1,
+        borderColor: '#DDDDDD',
     },
     materialRow: {
         justifyContent: 'center',
         paddingHorizontal: 4,
-        paddingVertical: 4
+        paddingVertical: 4,
     },
     actionRow: {
         flexDirection: 'row',
         justifyContent: 'center',
-        paddingVertical: 4,
+        paddingVertical: 6,
     },
 
     materialButton: {
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 4,
-        marginHorizontal: 4,
-        borderRadius: 4,
-        minWidth: 50,
+        marginHorizontal: 5,
+        borderRadius: 25,
+        width: 50,
         height: 50,
     },
-    materialText: { fontSize: 10, color: '#fff', textAlign: 'center' },
-    selectedMaterial: { borderWidth: 2, borderColor: '#000' },
+    materialText: {
+        fontSize: 9,
+        color: '#FFFFFF',
+        textAlign: 'center',
+        fontWeight: 'bold'
+    },
+    selectedMaterial: {
+        borderWidth: 2,
+        borderColor: '#000000'
+    },
 
     toolButton: {
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        backgroundColor: '#E0E0E0',
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        backgroundColor: '#DDDDDD',
         marginHorizontal: 4,
-        borderRadius: 4
+        borderRadius: 6,
+        minWidth: 60,
+        alignItems: 'center',
     },
-    activeTool: { backgroundColor: '#C8E6C9' },
-    toolText: { fontSize: 12 },
+    activeTool: { backgroundColor: '#A5D6A7' },
+    toolText: { fontSize: 12, color: '#333333' },
 
     importInput: {
-        height: 60,
-        borderColor: '#ddd',
+        height: 80,
+        borderColor: '#BDBDBD',
         borderWidth: 1,
-        margin: 4,
-        padding: 4,
+        margin: 8,
+        padding: 6,
         fontSize: 12,
-        borderRadius: 4
+        borderRadius: 6,
+        backgroundColor: '#FAFAFA',
     },
 
     exportPopup: {
@@ -379,22 +409,27 @@ const styles = StyleSheet.create({
         top: '20%',
         left: '10%',
         right: '10%',
-        backgroundColor: '#fff',
-        padding: 12,
-        borderRadius: 8,
-        elevation: 5,
+        backgroundColor: '#FFFFFF',
+        padding: 16,
+        borderRadius: 12,
+        elevation: 6,
         shadowColor: '#000',
         shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 2 },
         shadowRadius: 4,
+        shadowOffset: { width: 0, height: 2 },
         maxHeight: '60%',
     },
-    exportText: { fontSize: 10, color: '#333' },
-    copyButton: {
-        marginTop: 8,
-        padding: 8,
-        backgroundColor: '#4CAF50',
-        borderRadius: 4
+    exportText: {
+        fontSize: 10,
+        color: '#333333',
     },
-    copyButtonText: { color: '#fff', textAlign: 'center', fontSize: 12 }
+    copyButton: {
+        backgroundColor: '#4CAF50',
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 8,
+        marginTop: 8,
+        alignItems: 'center',
+    },
+    copyButtonText: { color: '#FFFFFF', fontSize: 12, fontWeight: '600' },
 });
