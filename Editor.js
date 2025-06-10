@@ -109,6 +109,15 @@ export default function Editor({ navigation }) {
         Alert.alert('Copied', 'Exported JSON copied to clipboard!');
     };
 
+    // Add these functions inside your Editor component
+    const eraseAll = () => {
+        setGrid(prev => prev.map(row => row.map(cell => ({ ...cell, material: 'empty' }))));
+    };
+
+    const fillAll = () => {
+        setGrid(prev => prev.map(row => row.map(cell => ({ ...cell, material: selectedMaterial }))));
+    };
+
     const importGrid = () => {
         try {
             const obj = JSON.parse(importString);
@@ -225,12 +234,17 @@ export default function Editor({ navigation }) {
                 </ScrollView>
 
                 {/* Action Buttons */}
-                <View style={styles.actionRow}>
-                    <TouchableOpacity
-                        style={[styles.toolButton, mode === 'eraser' && styles.activeTool]}
-                        onPress={() => setMode('eraser')}
-                    >
-                        <Text style={styles.toolText}>Erase</Text>
+                <View style={styles.actionRow}><TouchableOpacity
+                    style={[styles.toolButton, mode === 'eraser' && styles.activeTool]}
+                    onPress={() => setMode('eraser')}
+                >
+                    <Text style={styles.toolText}>Erase</Text>
+                </TouchableOpacity>
+                    <TouchableOpacity style={styles.toolButton} onPress={eraseAll}>
+                        <Text style={styles.toolText}>Erase All</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.toolButton} onPress={fillAll}>
+                        <Text style={styles.toolText}>Fill All</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.toolButton} onPress={exportGrid}>
                         <Text style={styles.toolText}>Export</Text>
