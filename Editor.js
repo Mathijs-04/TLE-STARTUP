@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 
 const MATERIALS = {
     grass: { name: 'Grass', color: '#8BC34A' },
@@ -7,8 +7,22 @@ const MATERIALS = {
     dirt: { name: 'Dirt', color: '#795548' },
     flowers: { name: 'Flowers', color: '#E91E63' },
     water: { name: 'Water', color: '#2196F3' },
-    wood: { name: 'Wood', color: '#5D4037' },
+    wood: { name: 'Sand', color: '#d5ba0a' },
 };
+
+const MATERIAL_CODES = {
+    grass: 'G',
+    tiles: 'T',
+    dirt: 'D',
+    flowers: 'F',
+    water: 'W',
+    wood: 'S',
+    empty: 'E',
+};
+
+const CODE_TO_MATERIAL = Object.fromEntries(
+    Object.entries(MATERIAL_CODES).map(([key, value]) => [value, key])
+);
 
 export default function Editor({ navigation }) {
     const [grid, setGrid] = useState([]);
@@ -16,8 +30,9 @@ export default function Editor({ navigation }) {
     const [cols, setCols] = useState(10);
     const [selectedMaterial, setSelectedMaterial] = useState('grass');
     const [mode, setMode] = useState('brush');
+    const [importString, setImportString] = useState('');
+    const [showImport, setShowImport] = useState(false);
 
-    // Initialize grid
     const initializeGrid = () => {
         const newGrid = [];
         for (let i = 0; i < rows; i++) {
@@ -30,7 +45,6 @@ export default function Editor({ navigation }) {
         setGrid(newGrid);
     };
 
-    // Handle cell tap
     const handleCellTap = (rowIndex, colIndex) => {
         if (!grid.length) return;
 
@@ -49,86 +63,78 @@ export default function Editor({ navigation }) {
         });
     };
 
+    const exportGrid = () => {
+        if (!grid.length) {
+            Alert.alert('Export Failed', 'No grid to export.');
+            return;
+        }
+
+        const exportArray = [];
+
+        grid.forEach((row, rowIndex) => {
+            row.forEach((cell, colIndex) => {
+                if (cell.material !== 'empty') {
+                    const code = MATERIAL_CODES[cell.material];
+                    exportArray.push(`${rowIndex}.${colIndex}.${code}`);
+                }
+            });
+        });
+
+        const exportObject = {
+            rows,
+            cols,
+            data: exportArray
+        };
+
+        const jsonString = JSON.stringify(exportObject, null, 2);
+        Alert.alert('Exported JSON (See Console)', jsonString);
+        console.log('Exported Grid:', jsonString);
+    };
+
+    const importGrid = () => {
+        try {
+            const obj = JSON.parse(importString);
+            if (!obj.rows || !obj.cols || !Array.isArray(obj.data)) {
+                Alert.alert('Import Error', 'Invalid format.');
+                return;
+            }
+
+            const newGrid = [];
+            for (let i = 0; i < obj.rows; i++) {
+                const row = [];
+                for (let j = 0; j < obj.cols; j++) {
+                    row.push({ material: 'empty', key: `${i}-${j}` });
+                }
+                newGrid.push(row);
+            }
+
+            obj.data.forEach(entry => {
+                const [r, c, code] = entry.split('.');
+                if (newGrid[r] && newGrid[r][c] && CODE_TO_MATERIAL[code]) {
+                    newGrid[r][c].material = CODE_TO_MATERIAL[code];
+                }
+            });
+
+            setRows(obj.rows);
+            setCols(obj.cols);
+            setGrid(newGrid);
+            Alert.alert('Import Successful', 'Grid imported.');
+        } catch (error) {
+            Alert.alert('Import Error', 'Invalid JSON.');
+        }
+    };
+
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
             <View style={styles.header}>
                 <Text style={styles.title}>Garden Editor</Text>
                 <Text style={styles.subtitle}>1 block = 1 square meter</Text>
             </View>
 
-            <View style={styles.controls}>
-                <View style={styles.sizeControls}>
-                    <View style={styles.inputGroup}>
-                        <Text style={styles.label}>Rows:</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={String(rows)}
-                            onChangeText={text => setRows(Number(text) || 10)}
-                            keyboardType="numeric"
-                        />
-                    </View>
-
-                    <View style={styles.inputGroup}>
-                        <Text style={styles.label}>Columns:</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={String(cols)}
-                            onChangeText={text => setCols(Number(text) || 10)}
-                            keyboardType="numeric"
-                        />
-                    </View>
-
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={initializeGrid}
-                    >
-                        <Text style={styles.buttonText}>Create Grid</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.toolSelector}>
-                    <TouchableOpacity
-                        style={[styles.toolButton, mode === 'brush' && styles.activeTool]}
-                        onPress={() => setMode('brush')}
-                    >
-                        <Text style={styles.toolText}>Paint</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={[styles.toolButton, mode === 'eraser' && styles.activeTool]}
-                        onPress={() => setMode('eraser')}
-                    >
-                        <Text style={styles.toolText}>Erase</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.materialContainer}>
-                    <Text style={styles.sectionLabel}>Materials:</Text>
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={styles.materialScroll}
-                    >
-                        {Object.entries(MATERIALS).map(([key, material]) => (
-                            <TouchableOpacity
-                                key={key}
-                                style={[
-                                    styles.materialButton,
-                                    { backgroundColor: material.color },
-                                    selectedMaterial === key && styles.selectedMaterial
-                                ]}
-                                onPress={() => {
-                                    setSelectedMaterial(key);
-                                    setMode('brush');
-                                }}
-                            >
-                                <Text style={styles.materialText}>{material.name}</Text>
-                            </TouchableOpacity>
-                        ))}
-                    </ScrollView>
-                </View>
-            </View>
-
+            {/* Grid Area */}
             <View style={styles.gridContainer}>
                 {grid.length > 0 ? (
                     grid.map((row, rowIndex) => (
@@ -152,154 +158,124 @@ export default function Editor({ navigation }) {
                     ))
                 ) : (
                     <View style={styles.emptyGrid}>
-                        <Text style={styles.emptyText}>Create a grid to start designing</Text>
+                        <Text style={styles.emptyText}>Create a grid to start</Text>
                     </View>
                 )}
             </View>
-        </View>
+
+            {/* 2-Layer Toolbar */}
+            <View style={styles.toolbarContainer}>
+                {/* Material Selection Row */}
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.materialRow}>
+                    {Object.entries(MATERIALS).map(([key, material]) => (
+                        <TouchableOpacity
+                            key={key}
+                            style={[
+                                styles.materialButton,
+                                { backgroundColor: material.color },
+                                selectedMaterial === key && styles.selectedMaterial
+                            ]}
+                            onPress={() => {
+                                setSelectedMaterial(key);
+                                setMode('brush');
+                            }}
+                        >
+                            <Text style={styles.materialText}>{material.name}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
+
+                {/* Action Buttons Row */}
+                <View style={styles.actionRow}>
+                    <TouchableOpacity
+                        style={[styles.toolButton, mode === 'eraser' && styles.activeTool]}
+                        onPress={() => setMode('eraser')}
+                    >
+                        <Text style={styles.toolText}>Erase</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.toolButton}
+                        onPress={initializeGrid}
+                    >
+                        <Text style={styles.toolText}>New Grid</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.toolButton}
+                        onPress={exportGrid}
+                    >
+                        <Text style={styles.toolText}>Export</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.toolButton}
+                        onPress={() => {
+                            if (showImport) {
+                                importGrid();
+                            }
+                            setShowImport(!showImport);
+                        }}
+                    >
+                        <Text style={styles.toolText}>{showImport ? 'Confirm Import' : 'Import'}</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+            {/* Import Text Field */}
+            {showImport && (
+                <TextInput
+                    style={styles.importInput}
+                    value={importString}
+                    onChangeText={setImportString}
+                    placeholder="Paste JSON here"
+                    multiline
+                />
+            )}
+        </KeyboardAvoidingView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16,
-        backgroundColor: '#fff',
-    },
-    header: {
-        marginBottom: 16,
-        alignItems: 'center',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: '600',
-        color: '#2E7D32',
-    },
-    subtitle: {
-        fontSize: 14,
-        color: '#616161',
-        marginTop: 4,
-    },
-    controls: {
-        marginBottom: 20,
-        backgroundColor: '#F5F5F5',
-        borderRadius: 12,
-        padding: 16,
-        elevation: 2,
-    },
-    sizeControls: {
-        flexDirection: 'row',
-        marginBottom: 16,
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    inputGroup: {
-        flex: 1,
-        marginRight: 10,
-    },
-    label: {
-        marginBottom: 4,
-        fontSize: 14,
-        color: '#616161',
-        fontWeight: '500',
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#E0E0E0',
-        borderRadius: 8,
-        padding: 10,
-        backgroundColor: '#fff',
-        fontSize: 16,
-    },
-    button: {
-        backgroundColor: '#4CAF50',
-        paddingVertical: 12,
-        paddingHorizontal: 16,
-        borderRadius: 8,
-        justifyContent: 'center',
-        marginTop: 18,
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: '500',
-    },
-    toolSelector: {
-        flexDirection: 'row',
-        marginBottom: 16,
-        justifyContent: 'center',
-    },
-    toolButton: {
-        padding: 12,
-        backgroundColor: '#EEEEEE',
-        marginHorizontal: 6,
-        borderRadius: 8,
-        minWidth: 100,
-        alignItems: 'center',
-    },
-    toolText: {
-        fontWeight: '500',
-        color: '#424242',
-    },
-    activeTool: {
-        backgroundColor: '#C8E6C9',
-        borderWidth: 1,
-        borderColor: '#4CAF50',
-    },
-    materialContainer: {
-        marginBottom: 8,
-    },
-    sectionLabel: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: '#424242',
-        marginBottom: 8,
-    },
-    materialScroll: {
-        paddingHorizontal: 4,
-    },
+    container: { flex: 1, backgroundColor: '#fff' },
+    header: { padding: 8, alignItems: 'center' },
+    title: { fontSize: 20, fontWeight: '600', color: '#2E7D32' },
+    subtitle: { fontSize: 12, color: '#757575' },
+    gridContainer: { flex: 7, justifyContent: 'center', alignItems: 'center' },
+    row: { flexDirection: 'row' },
+    cell: { width: 25, height: 25, borderWidth: 0.5 },
+    emptyGrid: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+    emptyText: { color: '#9E9E9E' },
+
+    toolbarContainer: { flex: 2, padding: 4, backgroundColor: '#F0F0F0' },
+    materialRow: { flexGrow: 0, marginBottom: 4 },
+    actionRow: { flexDirection: 'row', justifyContent: 'center' },
+
     materialButton: {
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        marginRight: 8,
-        borderRadius: 20,
-        minWidth: 70,
+        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        height: 36,
+        padding: 4,
+        marginHorizontal: 4,
+        borderRadius: 4,
+        minWidth: 50
     },
-    selectedMaterial: {
-        borderWidth: 2,
-        borderColor: '#212121',
+    materialText: { fontSize: 10, color: '#fff', textAlign: 'center' },
+    selectedMaterial: { borderWidth: 2, borderColor: '#000' },
+
+    toolButton: {
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        backgroundColor: '#E0E0E0',
+        marginHorizontal: 4,
+        borderRadius: 4
     },
-    materialText: {
-        color: 'black',
-        fontWeight: '500',
-        fontSize: 12,
-    },
-    gridContainer: {
-        flex: 1,
+    activeTool: { backgroundColor: '#C8E6C9' },
+    toolText: { fontSize: 12 },
+
+    importInput: {
+        height: 60,
+        borderColor: '#ddd',
         borderWidth: 1,
-        borderColor: '#E0E0E0',
-        borderRadius: 8,
-        overflow: 'hidden',
-        backgroundColor: '#F9F9F9',
-    },
-    row: {
-        flexDirection: 'row',
-    },
-    cell: {
-        width: 30,
-        height: 30,
-        borderWidth: 0.5,
-    },
-    emptyGrid: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    emptyText: {
-        fontSize: 16,
-        color: '#9E9E9E',
-        textAlign: 'center',
-    },
+        margin: 4,
+        padding: 4,
+        fontSize: 12,
+        borderRadius: 4
+    }
 });
