@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40.002" height="40.002" viewBox="0 0 40.002 40.002">
+  <g id="Icon_akar-grid" data-name="Icon akar-grid" transform="translate(-2.5 -2.5)">
+    <path id="Path_11" data-name="Path 11" d="M6.5,4.5h10a2,2,0,0,1,2,2v10a2,2,0,0,1-2,2H6.5a2,2,0,0,1-2-2V6.5a2,2,0,0,1,2-2Z" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+    <path id="Path_12" data-name="Path 12" d="M6.5,21h10a2,2,0,0,1,2,2V33a2,2,0,0,1-2,2H6.5a2,2,0,0,1-2-2V23a2,2,0,0,1,2-2Z" transform="translate(0 5.501)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+    <path id="Path_13" data-name="Path 13" d="M23,4.5H33a2,2,0,0,1,2,2v10a2,2,0,0,1-2,2H23a2,2,0,0,1-2-2V6.5A2,2,0,0,1,23,4.5Z" transform="translate(5.501)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+    <path id="Path_14" data-name="Path 14" d="M23,21H33a2,2,0,0,1,2,2V33a2,2,0,0,1-2,2H23a2,2,0,0,1-2-2V23A2,2,0,0,1,23,21Z" transform="translate(5.501 5.501)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+  </g>
+</svg>

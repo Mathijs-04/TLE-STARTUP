@@ -1,30 +1,61 @@
-import * as React from 'react';
-import { Button, View, Text, StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Homepage from './Homepage';
+import { StyleSheet, Text, View } from 'react-native';
+import {NavigationContainer} from "@react-navigation/native";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import HomeIcon from './iconComponents/HomeIcon';
+import PlantIcon from './iconComponents/PlantIcon';
+import InfoIcon from './iconComponents/InfoIcon';
+import HomeScreen from "./screens/HomeScreen";
+import GardenScreen from "./screens/GardenScreen";
+import InfoScreen from "./screens/InfoScreen";
 
-function HomeScreen({ navigation }) {
-  return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Button
-            title="Go to Homepage"
-            onPress={() => navigation.navigate('Homepage')}
-        />
-      </View>
-  );
-}
+const Tab = createBottomTabNavigator();
 
-const Stack = createStackNavigator();
 
 export default function App() {
   return (
+    <AppNavigator/>
+  );
+}
+
+function AppNavigator() {
+  return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Homepage" component={Homepage} />
-        </Stack.Navigator>
+          <Tab.Navigator
+              id={1}
+              initialRouteName="Home"
+              screenOptions={{
+                  headerStyle: { backgroundColor: 'tomato' },
+                  tabBarStyle: { backgroundColor: '#fff' },
+                  tabBarActiveTintColor: '#000',
+              }}>
+              <Tab.Screen
+                  name="Home"
+                  component={HomeScreen}
+                  options={{
+                      tabBarIcon: ({ color, size }) => (
+                          <HomeIcon width={size} height={size} stroke={color} />
+                      ),
+                  }}
+              />
+              <Tab.Screen
+                  name="Garden"
+                  component={GardenScreen}
+                  options={{
+                      tabBarIcon: ({ color, size }) => (
+                          <PlantIcon width={size} height={size} stroke={color} />
+                      ),
+                  }}
+              />
+              <Tab.Screen
+                  name="Info"
+                  component={InfoScreen}
+                  options={{
+                      tabBarIcon: ({ color, size }) => (
+                          <InfoIcon width={size} height={size} stroke={color} />
+                      ),
+                  }}
+              />
+          </Tab.Navigator>
       </NavigationContainer>
   );
 }
