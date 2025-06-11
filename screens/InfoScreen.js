@@ -17,8 +17,10 @@ export default function InfoScreen({navigation}) {
     };
 
     return (<View style={styles.container}>
-        <Text style={styles.h1}>Planten</Text>
-        <Text style={styles.h2}>Encyclopedie</Text>
+        <View style={styles.title}>
+            <Text style={styles.h1}>Planten</Text>
+            <Text style={styles.h2}>Encyclopedie</Text>
+        </View>
 
         <View style={styles.searchContainer}>
             <TextInput
@@ -27,17 +29,25 @@ export default function InfoScreen({navigation}) {
                 value={search}
                 onChangeText={handleSearch}
             />
-            <FlatList
-                data={filteredData}
-                style={styles.listSide}
-                keyExtractor={(item) => item}
-                renderItem={({item}) => <Text style={styles.item}>{item}</Text>}
-            />
+            <View style={styles.listSide}>
+                <FlatList style={styles.flatlist}
+                          data={filteredData}
+                          keyExtractor={(item) => item}
+                          renderItem={({item}) => <Text style={styles.item}>{item}</Text>}
+                />
+                <FlatList style={styles.flatlist}
+                          data={filteredData}
+                          keyExtractor={(item) => item}
+                          renderItem={({item}) => <Text style={styles.item}>{item}</Text>}
+                />
+            </View>
+
         </View>
 
 
         <View style={styles.description1}>
             <Text style={styles.h2}>Plantnaam</Text>
+
             <View style={styles.description2}>
                 <View style={styles.column1}>
 
@@ -68,37 +78,50 @@ export default function InfoScreen({navigation}) {
 
 const styles = StyleSheet.create({
     container: {
+        padding: 20,
         flex: 1,
         backgroundColor: '#fff',
-        alignItems: 'center', // justifyContent: 'center',
+        alignItems: 'center',
+        // justifyContent: 'center',
     },
+
+    title: {
+        width: '100%',
+    },
+
     searchContainer: {
-        flexDirection: 'row',
-        width: '90%',
-        height: 50, // Adjust based on your layout
+        width: '100%',
+        height: 100,
         marginVertical: 20,
+        gap: 10,
     },
     inputSide: {
         flex: 1,
         height: '100%',
         borderColor: '#999',
         borderWidth: 1,
-        borderRadius: 8,
+        borderRadius: 30,
         paddingHorizontal: 10,
         marginRight: 10,
     },
     listSide: {
-        flex: 2,
+        flexDirection: 'row',
+        gap: 20,
+        flex: 1,
+
+
+    },
+    flatlist: {
         borderColor: '#ccc',
         borderWidth: 1,
-        borderRadius: 8,
+        borderRadius: 30,
     },
 
     input: {
         height: 50,
         borderColor: '#999',
         borderWidth: 1,
-        borderRadius: 8,
+        borderRadius: 30,
         paddingHorizontal: 10,
         marginBottom: 20,
     },
@@ -108,6 +131,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         borderBottomWidth: 0.5,
         borderColor: '#ccc',
+        alignItems: 'center',
     },
 
     h1: {
@@ -118,22 +142,23 @@ const styles = StyleSheet.create({
     h2: {
         fontSize: 24,
         fontWeight: "light",
-        fontStyle: "italic"
+        fontStyle: "italic",
     },
 
     img: {
         width: 100,
         height: 100,
-        borderRadius: 30,
-        margin: 20
+        borderRadius: 100,
+
     },
 
     description1: {
-        width: 400,
+        width: 370,
         borderRadius: 30,
         padding: 20,
         marginBottom: 10,
         backgroundColor: 'white',
+        gap: 8,
 
         // iOS shadow
         shadowColor: '#000',
