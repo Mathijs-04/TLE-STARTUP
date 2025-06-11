@@ -24,8 +24,8 @@ function AppNavigator() {
               id={1}
               initialRouteName="Home"
               screenOptions={{
-                  headerStyle: { backgroundColor: '#FCFCFC' },
-                  tabBarStyle: { backgroundColor: '#455736' },
+                  headerStyle: { backgroundColor: '#455736' },
+                  tabBarStyle: { backgroundColor: '#fff' },
                   tabBarActiveTintColor: '#000',
               }}>
               <Tab.Screen
@@ -47,7 +47,7 @@ function AppNavigator() {
                   }}
               />
               <Tab.Screen
-                  name="Planten Encyclopedie"
+                  name="Info"
                   component={InfoScreen}
                   options={{
                       tabBarIcon: ({ color, size }) => (
