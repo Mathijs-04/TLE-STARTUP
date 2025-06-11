@@ -1,20 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Image, Pressable, StyleSheet, Switch, Text, View} from 'react-native';
+
+
+const data = [
+    'Apple', 'Banana', 'Orange', 'Pineapple', 'Grapes', 'Mango', 'Strawberry'
+];
+
 
 export default function InfoScreen({navigation}) {
     return (
         <View style={styles.container}>
-            <Text style={styles.h1}>Hoi</Text>
-            <Text style={styles.h2}>Hallo</Text>
-            <Image
-                style={styles.img}
-                source={require('../assets/inside_you_there_are_two_wolves.png')}/>
+            <Text style={styles.h1}>Planten</Text>
+            <Text style={styles.h2}>Encyclopedie</Text>
+
             <View style={styles.description1}
             >
                 <View style={styles.column1}>
                     <Text>Story:</Text>
                     <Text>Director: </Text>
                     <Text>Rating:</Text>
+                    <Image
+                        style={styles.img}
+                        source={require('../assets/inside_you_there_are_two_wolves.png')}
+                    />
                 </View>
                 <View style={styles.column2}>
                     <Text>Yiming Li </Text>
