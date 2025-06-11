@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
     View,
     Text,
@@ -9,17 +9,18 @@ import {
     Alert,
     KeyboardAvoidingView,
     Platform,
-    Clipboard
+    Clipboard,
+    Image
 } from 'react-native';
 
 const MATERIALS = {
-    grass: { name: 'Grass', color: '#8BC34A' },
-    hedge: { name: 'Hedge', color: '#1a5700' },
-    tiles: { name: 'Tiles', color: '#9E9E9E' },
-    dirt: { name: 'Dirt', color: '#795548' },
-    flowers: { name: 'Flowers', color: '#E91E63' },
-    water: { name: 'Water', color: '#2196F3' },
-    sand: { name: 'Sand', color: '#d5ba0a' },
+    grass: {name: 'Grass', image: require('./assets/materials/grass.webp')},
+    hedge: {name: 'Hedge', image: require('./assets/materials/hedge.webp')},
+    tiles: {name: 'Tiles', image: require('./assets/materials/tiles.webp')},
+    dirt: {name: 'Dirt', image: require('./assets/materials/dirt.webp')},
+    flowers: {name: 'Flowers', image: require('./assets/materials/flowers.webp')},
+    water: {name: 'Water', image: require('./assets/materials/water.webp')},
+    sand: {name: 'Sand', image: require('./assets/materials/sand.webp')},
 };
 
 const MATERIAL_CODES = {
@@ -37,7 +38,7 @@ const CODE_TO_MATERIAL = Object.fromEntries(
     Object.entries(MATERIAL_CODES).map(([key, value]) => [value, key])
 );
 
-export default function Editor({ navigation }) {
+export default function Editor({navigation}) {
     const [grid, setGrid] = useState([]);
     const [rows, setRows] = useState(10);
     const [cols, setCols] = useState(10);
@@ -53,7 +54,7 @@ export default function Editor({ navigation }) {
         for (let i = 0; i < rows; i++) {
             const row = [];
             for (let j = 0; j < cols; j++) {
-                row.push({ material: 'empty', key: `${i}-${j}` });
+                row.push({material: 'empty', key: `${i}-${j}`});
             }
             newGrid.push(row);
         }
@@ -68,9 +69,9 @@ export default function Editor({ navigation }) {
             const newRow = [...newGrid[rowIndex]];
 
             if (mode === 'eraser') {
-                newRow[colIndex] = { ...newRow[colIndex], material: 'empty' };
+                newRow[colIndex] = {...newRow[colIndex], material: 'empty'};
             } else {
-                newRow[colIndex] = { ...newRow[colIndex], material: selectedMaterial };
+                newRow[colIndex] = {...newRow[colIndex], material: selectedMaterial};
             }
 
             newGrid[rowIndex] = newRow;
@@ -112,11 +113,11 @@ export default function Editor({ navigation }) {
     };
 
     const eraseAll = () => {
-        setGrid(prev => prev.map(row => row.map(cell => ({ ...cell, material: 'empty' }))));
+        setGrid(prev => prev.map(row => row.map(cell => ({...cell, material: 'empty'}))));
     };
 
     const fillAll = () => {
-        setGrid(prev => prev.map(row => row.map(cell => ({ ...cell, material: selectedMaterial }))));
+        setGrid(prev => prev.map(row => row.map(cell => ({...cell, material: selectedMaterial}))));
     };
 
     const importGrid = () => {
@@ -131,7 +132,7 @@ export default function Editor({ navigation }) {
             for (let i = 0; i < obj.rows; i++) {
                 const row = [];
                 for (let j = 0; j < obj.cols; j++) {
-                    row.push({ material: 'empty', key: `${i}-${j}` });
+                    row.push({material: 'empty', key: `${i}-${j}`});
                 }
                 newGrid.push(row);
             }
@@ -158,9 +159,7 @@ export default function Editor({ navigation }) {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
             <View style={styles.settingsRow}>
-
                 <Text style={styles.barText}>B:</Text>
-
                 <TextInput
                     style={styles.input}
                     keyboardType="numeric"
@@ -171,11 +170,8 @@ export default function Editor({ navigation }) {
                         setRows(value);
                     }}
                 />
-
-                <Text style={styles.barText}>m   </Text>
-
+                <Text style={styles.barText}>m </Text>
                 <Text style={styles.barText}>L:</Text>
-
                 <TextInput
                     style={styles.input}
                     keyboardType="numeric"
@@ -186,9 +182,7 @@ export default function Editor({ navigation }) {
                         setCols(value);
                     }}
                 />
-
-                <Text style={styles.barText}>m   </Text>
-
+                <Text style={styles.barText}>m </Text>
                 <TouchableOpacity style={styles.gridButton} onPress={initializeGrid}>
                     <Text style={styles.gridButtonText}>Maak tuin</Text>
                 </TouchableOpacity>
@@ -201,17 +195,17 @@ export default function Editor({ navigation }) {
                             {row.map((cell, colIndex) => (
                                 <TouchableOpacity
                                     key={cell.key}
-                                    style={[
-                                        styles.cell,
-                                        {
-                                            backgroundColor: cell.material === 'empty'
-                                                ? '#F9F9F9'
-                                                : MATERIALS[cell.material].color,
-                                            borderColor: cell.material === 'empty' ? '#E0E0E0' : 'rgba(0,0,0,0.1)'
-                                        }
-                                    ]}
+                                    style={styles.cell}
                                     onPress={() => handleCellTap(rowIndex, colIndex)}
-                                />
+                                >
+                                    {cell.material !== 'empty' && (
+                                        <Image
+                                            source={MATERIALS[cell.material].image}
+                                            style={styles.materialImage}
+                                            resizeMode="cover"
+                                        />
+                                    )}
+                                </TouchableOpacity>
                             ))}
                         </View>
                     ))
@@ -223,13 +217,13 @@ export default function Editor({ navigation }) {
             </View>
 
             <View style={styles.toolbarContainer}>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.materialRow}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={styles.materialRow}>
                     {Object.entries(MATERIALS).map(([key, material]) => (
                         <TouchableOpacity
                             key={key}
                             style={[
                                 styles.materialButton,
-                                { backgroundColor: material.color },
                                 selectedMaterial === key && styles.selectedMaterial
                             ]}
                             onPress={() => {
@@ -237,6 +231,7 @@ export default function Editor({ navigation }) {
                                 setMode('brush');
                             }}
                         >
+                            <Image source={material.image} style={styles.toolbarImage} resizeMode="cover"/>
                             <Text style={styles.materialText}>{material.name}</Text>
                         </TouchableOpacity>
                     ))}
@@ -281,29 +276,26 @@ export default function Editor({ navigation }) {
             )}
 
             {showExport && (
-                <View style={styles.exportPopup}>
-                    <ScrollView>
-                        <Text style={styles.exportText}>{exportString}</Text>
-                    </ScrollView>
-                    <TouchableOpacity style={styles.copyButton} onPress={copyToClipboard}>
-                        <Text style={styles.copyButtonText}>Copy to Clipboard</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.copyButton} onPress={() => setShowExport(false)}>
-                        <Text style={styles.copyButtonText}>Close</Text>
-                    </TouchableOpacity>
-                </View>
+                <ScrollView>
+                    <View style={styles.exportPopup}>
+                        <ScrollView>
+                            <Text style={styles.exportText}>{exportString}</Text>
+                        </ScrollView>
+                        <TouchableOpacity style={styles.copyButton} onPress={copyToClipboard}>
+                            <Text style={styles.copyButtonText}>Copy to Clipboard</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.copyButton} onPress={() => setShowExport(false)}>
+                            <Text style={styles.copyButtonText}>Close</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
             )}
         </KeyboardAvoidingView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#FFFFFF' },
-
-    header: { paddingVertical: 12, alignItems: 'center', backgroundColor: '#F8F8F8' },
-    title: { fontSize: 24, fontWeight: 'bold', color: '#4CAF50' },
-    subtitle: { fontSize: 12, color: '#757575' },
-
+    container: {flex: 1, backgroundColor: '#FFFFFF'},
     settingsRow: {
         flexDirection: 'row',
         justifyContent: 'center',
@@ -325,115 +317,75 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         textAlign: 'center'
     },
-    barText: {
-        color: 'white',
-    },
+    barText: {color: 'white'},
     gridButton: {
         backgroundColor: '#455736',
         paddingHorizontal: 14,
         paddingVertical: 8,
-        borderRadius: 8,
-        marginLeft: 6
+        borderRadius: 8
     },
-    gridButtonText: { color: '#FFFFFF', fontWeight: '600', fontSize: 14 },
-
-    gridContainer: { flex: 6, justifyContent: 'center', alignItems: 'center' },
-    row: { flexDirection: 'row' },
+    gridButtonText: {color: '#FFFFFF'},
+    gridContainer: {flex: 1, justifyContent: "center", alignItems: 'center', padding: 8},
+    row: {flexDirection: 'row'},
     cell: {
-        width: 28,
-        height: 28,
+        width: 30,
+        height: 30,
         borderWidth: 1,
         borderColor: '#E0E0E0',
-        borderRadius: 4,
-    },
-    emptyGrid: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-    emptyText: { color: '#BDBDBD', fontSize: 14 },
-
-    toolbarContainer: {
-        paddingVertical: 8,
-        backgroundColor: '#849970',
-        borderTopWidth: 1,
-        borderColor: '#455736',
-    },
-    materialRow: {
         justifyContent: 'center',
-        paddingHorizontal: 4,
-        paddingVertical: 4,
+        alignItems: 'center'
     },
-    actionRow: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        paddingVertical: 6,
-    },
-
+    materialImage: {width: 28, height: 28},
+    emptyGrid: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+    emptyText: {color: '#999999'},
+    toolbarContainer: {padding: 8, backgroundColor: '#849970'},
+    materialRow: {flexDirection: 'row', alignItems: 'center'},
     materialButton: {
-        alignItems: 'center',
+        width: 60,
+        height: 60,
+        margin: 4,
         justifyContent: 'center',
-        marginHorizontal: 5,
-        borderRadius: 25,
-        width: 50,
-        height: 50,
-    },
-    materialText: {
-        fontSize: 9,
-        color: '#FFFFFF',
-        textAlign: 'center',
-        fontWeight: 'bold'
-    },
-    selectedMaterial: {
-        borderWidth: 2,
-        borderColor: '#000000'
-    },
-
-    toolButton: {
-        paddingHorizontal: 10,
-        paddingVertical: 6,
-        backgroundColor: '#455736',
-        marginHorizontal: 4,
-        borderRadius: 6,
-        minWidth: 60,
         alignItems: 'center',
+        borderRadius: 8,
+        backgroundColor: '#455736'
     },
-    activeTool: { backgroundColor: '#2A3320' },
-    toolText: { fontSize: 12, color: '#FFFFFF' },
-
+    selectedMaterial: {borderWidth: 2, borderColor: '#FFFFFF'},
+    toolbarImage: {width: 40, height: 40},
+    materialText: {fontSize: 10, textAlign: 'center', color: 'white'},
+    actionRow: {flexDirection: 'row', justifyContent: 'space-around', marginTop: 8},
+    toolButton: {
+        backgroundColor: '#455736',
+        padding: 8,
+        borderRadius: 8
+    },
+    activeTool: {backgroundColor: '#FF9800'},
+    toolText: {color: '#FFFFFF'},
     importInput: {
-        height: 80,
-        borderColor: '#BDBDBD',
-        borderWidth: 1,
+        height: 100,
         margin: 8,
-        padding: 6,
-        fontSize: 12,
-        borderRadius: 6,
-        backgroundColor: '#FAFAFA',
+        borderColor: '#999',
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 8,
+        textAlignVertical: 'top'
     },
-
     exportPopup: {
         position: 'absolute',
-        top: '20%',
-        left: '10%',
-        right: '10%',
+        top: 50,
+        left: 20,
+        right: 20,
         backgroundColor: '#FFFFFF',
-        padding: 16,
-        borderRadius: 12,
-        elevation: 6,
-        shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-        shadowOffset: { width: 0, height: 2 },
-        maxHeight: '60%',
-    },
-    exportText: {
-        fontSize: 10,
-        color: '#333333',
-    },
-    copyButton: {
-        backgroundColor: '#4CAF50',
-        paddingVertical: 8,
-        paddingHorizontal: 12,
         borderRadius: 8,
-        marginTop: 8,
-        alignItems: 'center',
+        padding: 8,
+        borderWidth: 1,
+        borderColor: '#999'
     },
-    copyButtonText: { color: '#FFFFFF', fontSize: 12, fontWeight: '600' },
+    exportText: {color: '#000'},
+    copyButton: {
+        backgroundColor: '#455736',
+        padding: 8,
+        borderRadius: 8,
+        marginTop: 8
+    },
+    copyButtonText: {color: '#FFFFFF', textAlign: 'center'}
 });
