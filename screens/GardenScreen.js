@@ -298,7 +298,7 @@ export default function Garden({navigation}) {
 }
 
 const styles = StyleSheet.create({
-    container: {flex: 1, backgroundColor: '#FFFFFF'},
+    container: {flex: 1, backgroundColor: '#FFFFFF', marginBottom: 80},
     settingsRow: {
         flexDirection: 'row',
         justifyContent: 'center',
