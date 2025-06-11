@@ -24,7 +24,7 @@ function AppNavigator() {
               id={1}
               initialRouteName="Home"
               screenOptions={{
-                  headerStyle: { backgroundColor: 'tomato' },
+                  headerStyle: { backgroundColor: '#455736' },
                   tabBarStyle: { backgroundColor: '#fff' },
                   tabBarActiveTintColor: '#000',
               }}>
