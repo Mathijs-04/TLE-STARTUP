@@ -157,13 +157,10 @@ export default function Editor({ navigation }) {
             style={styles.container}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
-            <View style={styles.header}>
-                <Text style={styles.title}>Garden Editor</Text>
-                <Text style={styles.subtitle}>1 block = 1 square meter</Text>
-            </View>
-
-            {/* Grid Settings */}
             <View style={styles.settingsRow}>
+
+                <Text style={styles.barText}>B:</Text>
+
                 <TextInput
                     style={styles.input}
                     keyboardType="numeric"
@@ -174,6 +171,11 @@ export default function Editor({ navigation }) {
                         setRows(value);
                     }}
                 />
+
+                <Text style={styles.barText}>m   </Text>
+
+                <Text style={styles.barText}>L:</Text>
+
                 <TextInput
                     style={styles.input}
                     keyboardType="numeric"
@@ -184,12 +186,14 @@ export default function Editor({ navigation }) {
                         setCols(value);
                     }}
                 />
+
+                <Text style={styles.barText}>m   </Text>
+
                 <TouchableOpacity style={styles.gridButton} onPress={initializeGrid}>
-                    <Text style={styles.gridButtonText}>New Grid</Text>
+                    <Text style={styles.gridButtonText}>Maak tuin</Text>
                 </TouchableOpacity>
             </View>
 
-            {/* Grid Area */}
             <View style={styles.gridContainer}>
                 {grid.length > 0 ? (
                     grid.map((row, rowIndex) => (
@@ -218,9 +222,7 @@ export default function Editor({ navigation }) {
                 )}
             </View>
 
-            {/* 2-Layer Toolbar */}
             <View style={styles.toolbarContainer}>
-                {/* Material Selection */}
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.materialRow}>
                     {Object.entries(MATERIALS).map(([key, material]) => (
                         <TouchableOpacity
@@ -240,7 +242,6 @@ export default function Editor({ navigation }) {
                     ))}
                 </ScrollView>
 
-                {/* Action Buttons */}
                 <View style={styles.actionRow}>
                     <TouchableOpacity
                         style={[styles.toolButton, mode === 'eraser' && styles.activeTool]}
@@ -269,7 +270,6 @@ export default function Editor({ navigation }) {
                 </View>
             </View>
 
-            {/* Import Text Field */}
             {showImport && (
                 <TextInput
                     style={styles.importInput}
@@ -280,7 +280,6 @@ export default function Editor({ navigation }) {
                 />
             )}
 
-            {/* Export Popup */}
             {showExport && (
                 <View style={styles.exportPopup}>
                     <ScrollView>
@@ -310,7 +309,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 8,
-        backgroundColor: '#F8F8F8'
+        backgroundColor: '#849970',
+        borderBottomWidth: 1,
+        borderColor: '#455736'
     },
     input: {
         width: 60,
@@ -324,8 +325,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         textAlign: 'center'
     },
+    barText: {
+        color: 'white',
+    },
     gridButton: {
-        backgroundColor: '#4CAF50',
+        backgroundColor: '#455736',
         paddingHorizontal: 14,
         paddingVertical: 8,
         borderRadius: 8,
@@ -347,9 +351,9 @@ const styles = StyleSheet.create({
 
     toolbarContainer: {
         paddingVertical: 8,
-        backgroundColor: '#EEEEEE',
+        backgroundColor: '#849970',
         borderTopWidth: 1,
-        borderColor: '#DDDDDD',
+        borderColor: '#455736',
     },
     materialRow: {
         justifyContent: 'center',
@@ -384,14 +388,14 @@ const styles = StyleSheet.create({
     toolButton: {
         paddingHorizontal: 10,
         paddingVertical: 6,
-        backgroundColor: '#DDDDDD',
+        backgroundColor: '#455736',
         marginHorizontal: 4,
         borderRadius: 6,
         minWidth: 60,
         alignItems: 'center',
     },
-    activeTool: { backgroundColor: '#A5D6A7' },
-    toolText: { fontSize: 12, color: '#333333' },
+    activeTool: { backgroundColor: '#2A3320' },
+    toolText: { fontSize: 12, color: '#FFFFFF' },
 
     importInput: {
         height: 80,
