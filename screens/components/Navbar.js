@@ -8,6 +8,7 @@ import PlantIcon from '../iconComponents/PlantIcon';
 import InfoIcon from '../iconComponents/InfoIcon';
 import HomeScreen from '../HomeScreen';
 import GardenScreen from '../GardenScreen';
+import FormScreen from '../FormScreen';
 import InfoScreen from '../InfoScreen';
 
 const Tab = createBottomTabNavigator();
@@ -64,7 +65,7 @@ export default function Navbar() {
                 />
                 <Tab.Screen
                     name="Info"
-                    component={InfoScreen}
+                    component={FormScreen}
                     options={{
                         tabBarIcon: ({ color, size, focused }) => (
                             <View style={styles.tabIconWrapper}>
