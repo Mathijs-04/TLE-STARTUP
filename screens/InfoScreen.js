@@ -4,11 +4,11 @@ import {Image, Pressable, StyleSheet, Switch, Text, View} from 'react-native';
 export default function InfoScreen({navigation}) {
     return (
         <View style={styles.container}>
-            <Text style={styles.h1}>Jake Wars: Skin Choices </Text>
-            <Text style={styles.h2}>How to lose at r6</Text>
+            <Text style={styles.h1}>Hoi</Text>
+            <Text style={styles.h2}>Hallo</Text>
             <Image
                 style={styles.img}
-                source={('assets/adaptive-icon.png')}/>
+                source={require('../assets/inside_you_there_are_two_wolves.png')}/>
             <View style={styles.description1}
             >
                 <View style={styles.column1}>
