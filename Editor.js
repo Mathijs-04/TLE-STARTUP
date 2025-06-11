@@ -171,7 +171,7 @@ export default function Editor({navigation}) {
                     }}
                 />
                 <Text style={styles.barText}>m </Text>
-                <Text style={styles.barText}>L:</Text>
+                <Text style={styles.barText}>   L:</Text>
                 <TextInput
                     style={styles.input}
                     keyboardType="numeric"
@@ -182,7 +182,7 @@ export default function Editor({navigation}) {
                         setCols(value);
                     }}
                 />
-                <Text style={styles.barText}>m </Text>
+                <Text style={styles.barText}>m    </Text>
                 <TouchableOpacity style={styles.gridButton} onPress={initializeGrid}>
                     <Text style={styles.gridButtonText}>Maak tuin</Text>
                 </TouchableOpacity>
@@ -242,13 +242,13 @@ export default function Editor({navigation}) {
                         style={[styles.toolButton, mode === 'eraser' && styles.activeTool]}
                         onPress={() => setMode('eraser')}
                     >
-                        <Text style={styles.toolText}>Erase</Text>
+                        <Text style={styles.toolText}>Gum</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.toolButton} onPress={eraseAll}>
-                        <Text style={styles.toolText}>Erase All</Text>
+                        <Text style={styles.toolText}>Gum Alles</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.toolButton} onPress={fillAll}>
-                        <Text style={styles.toolText}>Fill All</Text>
+                        <Text style={styles.toolText}>Vul Alles</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.toolButton} onPress={exportGrid}>
                         <Text style={styles.toolText}>Export</Text>
@@ -260,35 +260,38 @@ export default function Editor({navigation}) {
                             setShowImport(!showImport);
                         }}
                     >
-                        <Text style={styles.toolText}>{showImport ? 'Confirm Import' : 'Import'}</Text>
+                        <Text style={styles.toolText}>{showImport ? 'Confirm' : 'Import'}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
 
             {showImport && (
-                <TextInput
-                    style={styles.importInput}
-                    value={importString}
-                    onChangeText={setImportString}
-                    placeholder="Paste JSON here"
-                    multiline
-                />
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    style={{ width: '100%' }}
+                >
+                    <TextInput
+                        style={styles.importInput}
+                        value={importString}
+                        onChangeText={setImportString}
+                        placeholder="Paste JSON here"
+                        multiline
+                    />
+                </KeyboardAvoidingView>
             )}
 
             {showExport && (
-                <ScrollView>
-                    <View style={styles.exportPopup}>
-                        <ScrollView>
-                            <Text style={styles.exportText}>{exportString}</Text>
-                        </ScrollView>
-                        <TouchableOpacity style={styles.copyButton} onPress={copyToClipboard}>
-                            <Text style={styles.copyButtonText}>Copy to Clipboard</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.copyButton} onPress={() => setShowExport(false)}>
-                            <Text style={styles.copyButtonText}>Close</Text>
-                        </TouchableOpacity>
-                    </View>
-                </ScrollView>
+                <View style={styles.exportPopup}>
+                    <ScrollView style={{ maxHeight: 200 }}>
+                        <Text style={styles.exportText}>{exportString}</Text>
+                    </ScrollView>
+                    <TouchableOpacity style={styles.copyButton} onPress={copyToClipboard}>
+                        <Text style={styles.copyButtonText}>Copy to Clipboard</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.copyButton} onPress={() => setShowExport(false)}>
+                        <Text style={styles.copyButtonText}>Close</Text>
+                    </TouchableOpacity>
+                </View>
             )}
         </KeyboardAvoidingView>
     );
