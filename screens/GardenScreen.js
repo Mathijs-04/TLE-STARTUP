@@ -14,13 +14,13 @@ import {
 } from 'react-native';
 
 const MATERIALS = {
-    grass: {name: 'Grass', image: require('./assets/materials/grass.webp')},
-    hedge: {name: 'Hedge', image: require('./assets/materials/hedge.webp')},
-    tiles: {name: 'Tiles', image: require('./assets/materials/tiles.webp')},
-    dirt: {name: 'Dirt', image: require('./assets/materials/dirt.webp')},
-    flowers: {name: 'Flowers', image: require('./assets/materials/flowers.webp')},
-    water: {name: 'Water', image: require('./assets/materials/water.webp')},
-    sand: {name: 'Sand', image: require('./assets/materials/sand.webp')},
+    grass: {name: 'Grass', image: require('../assets/materials/grass.webp')},
+    hedge: {name: 'Hedge', image: require('../assets/materials/hedge.webp')},
+    tiles: {name: 'Tiles', image: require('../assets/materials/tiles.webp')},
+    dirt: {name: 'Dirt', image: require('../assets/materials/dirt.webp')},
+    flowers: {name: 'Flowers', image: require('../assets/materials/flowers.webp')},
+    water: {name: 'Water', image: require('../assets/materials/water.webp')},
+    sand: {name: 'Sand', image: require('../assets/materials/sand.webp')},
 };
 
 const MATERIAL_CODES = {
