@@ -2,19 +2,43 @@ import React, {useState} from 'react';
 import {FlatList, Image, Pressable, StyleSheet, Switch, Text, TextInput, View} from 'react-native';
 
 
-const data = ['Apple', 'Banana', 'Orange', 'Pineapple', 'Grapes', 'Mango', 'Strawberry'];
+const plantData = [
+    {
+        name: 'Obada',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit...',
+        image: require('../assets/plant-temp.png'),
+    },
+    {
+        name: 'Elisa',
+        description: 'Dolor sit amet, accusantium aliquid, animi aperiam...',
+        image: require('../assets/plant-temp.png'),
+    },
+    {
+        name: 'Lucas',
+        description: 'Iusto laborum magnam maiores maxime non, optio quisquam...',
+        image: require('../assets/plant-temp.png'),
+    },
+    // Add more items as needed
+];
 
 
 export default function InfoScreen({navigation}) {
 
     const [search, setSearch] = useState('');
-    const [filteredData, setFilteredData] = useState(data);
+    const [filteredPlants, setFilteredPlants] = useState(plantData);
+    const data = ['Apple', 'Banana', 'Orange', 'Pineapple', 'Grapes', 'Mango', 'Strawberry'];
+
 
     const handleSearch = (text) => {
         setSearch(text);
-        const newData = data.filter(item => item.toLowerCase().includes(text.toLowerCase()));
-        setFilteredData(newData);
+        const filtered = plantData.filter((plant) =>
+            plant.name.toLowerCase().includes(text.toLowerCase())
+        );
+        setFilteredPlants(filtered);
     };
+
+
+
 
     return (<View style={styles.container}>
         <View style={styles.title}>
@@ -30,13 +54,13 @@ export default function InfoScreen({navigation}) {
                 onChangeText={handleSearch}
             />
             <View style={styles.listSide}>
-                <FlatList style={styles.flatlist}
-                          data={filteredData}
+                <FlatList style={styles.filter}
+                          data={data}
                           keyExtractor={(item) => item}
                           renderItem={({item}) => <Text style={styles.item}>{item}</Text>}
                 />
-                <FlatList style={styles.flatlist}
-                          data={filteredData}
+                <FlatList style={styles.filter}
+                          data={data}
                           keyExtractor={(item) => item}
                           renderItem={({item}) => <Text style={styles.item}>{item}</Text>}
                 />
@@ -45,26 +69,26 @@ export default function InfoScreen({navigation}) {
         </View>
 
 
-        <View style={styles.description1}>
-            <Text style={styles.h2}>Plantnaam</Text>
+        <FlatList
+            data={filteredPlants}
 
-            <View style={styles.description2}>
-                <View style={styles.column1}>
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={{ gap: 10 }}
+            renderItem={({ item }) => (
+                <View style={styles.description1}>
+                    <Text style={styles.h2}>{item.name}</Text>
+                    <View style={styles.description2}>
+                        <View style={styles.column1}>
+                            <Text>{item.description}</Text>
+                        </View>
+                        <View style={styles.column2}>
+                            <Image style={styles.img} source={item.image} />
+                        </View>
+                    </View>
+                </View>
+            )}
+        />
 
-                    <Text>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, animi aperiam
-                        aspernatur debitis eos ipsa ipsum, iusto laborum magnam maiores maxime non, optio quisquam
-                        reprehenderit sed voluptas voluptatem voluptates.
-                    </Text>
-                </View>
-                <View style={styles.column2}>
-                    <Image
-                        style={styles.img}
-                        source={require('../assets/inside_you_there_are_two_wolves.png')}
-                    />
-                </View>
-            </View>
-        </View>
 
 
         {/*<Switch style={styles.switch}*/}
@@ -111,7 +135,7 @@ const styles = StyleSheet.create({
 
 
     },
-    flatlist: {
+    filter: {
         borderColor: '#ccc',
         borderWidth: 1,
         borderRadius: 30,
@@ -146,10 +170,10 @@ const styles = StyleSheet.create({
     },
 
     img: {
-        width: 100,
-        height: 100,
+        width: 120,
+        height: 120,
         borderRadius: 100,
-
+        objectFit: "fill",
     },
 
     description1: {
