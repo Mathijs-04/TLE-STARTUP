@@ -59,7 +59,7 @@ export default function InfoScreen() {
     return (
         <View style={{padding: 20}}>
             <Text>Formaat: {gardenInfo.size} m²</Text>
-            <Text>Vergroeningspercentage: {gardenInfo.greenPercent}%</Text>
+            <Text>Percentage groen: {gardenInfo.greenPercent}%</Text>
         </View>
     );
 }
