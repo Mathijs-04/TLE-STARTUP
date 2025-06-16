@@ -16,7 +16,7 @@ export default function PlantDetails() {
                         source={require("../assets/test_image.png")}
                         style={styles.blurredImage}
                         resizeMode="cover"
-                        blurRadius={15} // This adds the blur
+                        blurRadius={20} // This adds the blur
                     />
                     <Image
                         source={require("../assets/test_image.png")}
