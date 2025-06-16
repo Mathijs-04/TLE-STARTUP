@@ -14,23 +14,27 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MATERIALS = {
-    grass: { name: 'Grass', image: require('../assets/materials/grass.webp') },
-    hedge: { name: 'Hedge', image: require('../assets/materials/hedge.webp') },
-    tiles: { name: 'Tiles', image: require('../assets/materials/tiles.webp') },
-    dirt: { name: 'Dirt', image: require('../assets/materials/dirt.webp') },
-    flowers: { name: 'Flowers', image: require('../assets/materials/flowers.webp') },
+    grass: { name: 'Gras', image: require('../assets/materials/grass.webp') },
+    hedge: { name: 'Heg', image: require('../assets/materials/hedge.webp') },
+    bush: { name: 'Bosje', image: require('../assets/materials/bush.webp') },
+    flowers: { name: 'Bloemen', image: require('../assets/materials/flower.webp') },
+    tiles: { name: 'Tegels', image: require('../assets/materials/tile.webp') },
+    dirt: { name: 'Aarde', image: require('../assets/materials/dirt.webp') },
+    sand: { name: 'Zand', image: require('../assets/materials/sand.webp') },
     water: { name: 'Water', image: require('../assets/materials/water.webp') },
-    sand: { name: 'Sand', image: require('../assets/materials/sand.webp') },
+    block: { name: 'Overig', image: require('../assets/materials/block.webp') },
 };
 
 const MATERIAL_CODES = {
     grass: 'G',
     hedge: 'H',
+    bush: 'B',
+    flowers: 'F',
     tiles: 'T',
     dirt: 'D',
-    flowers: 'F',
-    water: 'W',
     sand: 'S',
+    water: 'W',
+    block: 'N',
     empty: 'E',
 };
 
@@ -68,17 +72,14 @@ export default function Garden({ navigation }) {
 
     const handleCellTap = (rowIndex, colIndex) => {
         if (!grid.length) return;
-
         setGrid(prev => {
             const newGrid = [...prev];
             const newRow = [...newGrid[rowIndex]];
-
             if (mode === 'eraser') {
                 newRow[colIndex] = { ...newRow[colIndex], material: 'empty' };
             } else {
                 newRow[colIndex] = { ...newRow[colIndex], material: selectedMaterial };
             }
-
             newGrid[rowIndex] = newRow;
             return newGrid;
         });
@@ -97,7 +98,6 @@ export default function Garden({ navigation }) {
             Alert.alert('Save Failed', 'No grid to save.');
             return;
         }
-
         const exportArray = [];
         grid.forEach((row, rowIndex) => {
             row.forEach((cell, colIndex) => {
@@ -107,18 +107,28 @@ export default function Garden({ navigation }) {
                 }
             });
         });
-
         const exportObject = {
             rows,
             cols,
             data: exportArray
         };
-
         const newSaveNumber = saveCount + 1;
         await AsyncStorage.setItem(`garden_${newSaveNumber}`, JSON.stringify(exportObject));
         setSaveCount(newSaveNumber);
         Alert.alert('Saved', `Garden ${newSaveNumber} saved.`);
     };
+
+    const materialButtonColors = [
+        '#87c55f',
+        '#c9db74',
+        '#8be0a4',
+        '#fe88b1',
+        '#b3b3b3',
+        '#836953',
+        '#f6cf71',
+        '#66c5cc',
+        '#ff6961'
+    ];
 
     return (
         <KeyboardAvoidingView
@@ -178,18 +188,19 @@ export default function Garden({ navigation }) {
                     ))
                 ) : (
                     <View style={styles.emptyGrid}>
-                        <Text style={styles.emptyText}>Create a grid to start</Text>
+                        <Text style={styles.emptyText}>Maak een tuin om te beginnen</Text>
                     </View>
                 )}
             </View>
 
             <View style={styles.toolbarContainer}>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.materialRow}>
-                    {Object.entries(MATERIALS).map(([key, material]) => (
+                    {Object.entries(MATERIALS).map(([key, material], index) => (
                         <TouchableOpacity
                             key={key}
                             style={[
                                 styles.materialButton,
+                                { backgroundColor: materialButtonColors[index] },
                                 selectedMaterial === key && styles.selectedMaterial
                             ]}
                             onPress={() => {
@@ -217,7 +228,7 @@ export default function Garden({ navigation }) {
                         <Text style={styles.toolText}>Vul Alles</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.toolButton} onPress={saveGarden}>
-                        <Text style={styles.toolText}>Save</Text>
+                        <Text style={styles.toolText}>Opslaan</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -252,16 +263,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         textAlign: 'center'
     },
-    barText: {color: 'white'},
+    barText: { color: 'white' },
     gridButton: {
         backgroundColor: '#455736',
         paddingHorizontal: 14,
         paddingVertical: 8,
         borderRadius: 8
     },
-    gridButtonText: {color: '#FFFFFF'},
-    gridContainer: {flex: 1, justifyContent: "center", alignItems: 'center', padding: 8, backgroundColor: '#FFFFFF'},
-    row: {flexDirection: 'row'},
+    gridButtonText: { color: '#FFFFFF' },
+    gridContainer: { flex: 1, justifyContent: "center", alignItems: 'center', padding: 8, backgroundColor: '#FFFFFF' },
+    row: { flexDirection: 'row' },
     cell: {
         width: 30,
         height: 30,
@@ -270,58 +281,28 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    materialImage: {width: 28, height: 28},
-    emptyGrid: {flex: 1, justifyContent: 'center', alignItems: 'center'},
-    emptyText: {color: '#999999'},
-    toolbarContainer: {padding: 8, backgroundColor: '#849970'},
-    materialRow: {flexDirection: 'row', alignItems: 'center'},
+    materialImage: { width: 28, height: 28 },
+    emptyGrid: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+    emptyText: { color: '#999999' },
+    toolbarContainer: { padding: 8, backgroundColor: '#849970' },
+    materialRow: { flexDirection: 'row', alignItems: 'center' },
     materialButton: {
         width: 60,
         height: 60,
         margin: 4,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 8,
-        backgroundColor: '#455736'
+        borderRadius: 8
     },
-    selectedMaterial: {borderWidth: 2, borderColor: '#FFFFFF'},
-    toolbarImage: {width: 40, height: 40},
-    materialText: {fontSize: 10, textAlign: 'center', color: 'white'},
-    actionRow: {flexDirection: 'row', justifyContent: 'space-around', marginTop: 8},
+    selectedMaterial: { borderWidth: 2, borderColor: '#FFFFFF' },
+    toolbarImage: { width: 40, height: 40 },
+    materialText: { fontSize: 10, textAlign: 'center', color: 'white' },
+    actionRow: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 8 },
     toolButton: {
         backgroundColor: '#455736',
         padding: 8,
         borderRadius: 8
     },
-    activeTool: {backgroundColor: '#FF9800'},
-    toolText: {color: '#FFFFFF'},
-    importInput: {
-        height: 100,
-        margin: 8,
-        borderColor: '#999',
-        borderWidth: 1,
-        borderRadius: 8,
-        padding: 8,
-        textAlignVertical: 'top'
-    },
-    exportPopup: {
-        position: 'absolute',
-        top: 50,
-        left: 20,
-        right: 20,
-        backgroundColor: '#FFFFFF',
-        borderRadius: 8,
-        padding: 8,
-        borderWidth: 1,
-        borderColor: '#999'
-    },
-    exportText: {color: '#000'},
-    copyButton: {
-        backgroundColor: '#455736',
-        padding: 8,
-        borderRadius: 8,
-        marginTop: 8
-    },
-    copyButtonText: {color: '#FFFFFF', textAlign: 'center'}
+    activeTool: { backgroundColor: '#FF9800' },
+    toolText: { color: '#FFFFFF' }
 });
-
