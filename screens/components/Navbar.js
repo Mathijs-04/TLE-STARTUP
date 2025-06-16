@@ -24,7 +24,7 @@ export default function Navbar() {
                     tabBarActiveTintColor: '#fff',
                     tabBarItemStyle: styles.tabBarItemStyle,
                     tabBarShowLabel: false,
-                    headerShown: false,
+                    headerShown: true,
                 }}
             >
                 <Tab.Screen
