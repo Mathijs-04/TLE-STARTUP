@@ -1,126 +1,151 @@
-import React, {useState} from 'react';
-import {FlatList, Image, Pressable, StyleSheet, Switch, Text, TextInput, View} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList, Image, StyleSheet, Text, TextInput, View, ActivityIndicator } from 'react-native';
 
-
-const plantData = [
-    {
-        name: 'Obada',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit...',
-        image: require('../assets/plant-temp.png'),
-    },
-    {
-        name: 'Elisa',
-        description: 'Dolor sit amet, accusantium aliquid, animi aperiam...',
-        image: require('../assets/plant-temp.png'),
-    },
-    {
-        name: 'Lucas',
-        description: 'Iusto laborum magnam maiores maxime non, optio quisquam...',
-        image: require('../assets/plant-temp.png'),
-    },
-    // Add more items as needed
-];
-
-
-export default function InfoScreen({navigation}) {
-
+export default function InfoScreen({ navigation }) {
     const [search, setSearch] = useState('');
-    const [filteredPlants, setFilteredPlants] = useState(plantData);
-    const data = ['Apple', 'Banana', 'Orange', 'Pineapple', 'Grapes', 'Mango', 'Strawberry'];
+    const [plantData, setPlantData] = useState([]); // fetched data
+    const [filteredPlants, setFilteredPlants] = useState([]); // visible data
+    const [loading, setLoading] = useState(true); // loading state
+
+    const filterData = ['Apple', 'Banana', 'Orange', 'Pineapple', 'Grapes', 'Mango', 'Strawberry'];
+
+    useEffect(() => {
+        fetch('http://145.137.55.234:8005/plants', {
+            headers: {
+                'Accept': 'application/json',
+            },
+        })
+            .then((res) => res.json())
+            .then((json) => {
+                const plantArray = Object.values(json);
+                setPlantData(plantArray);
+                setFilteredPlants(plantArray);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error('Error fetching plant data:', err);
+                setLoading(false);
+            });
+        console.log('filteredPlants:', filteredPlants);
+
+    }, []);
 
 
     const handleSearch = (text) => {
         setSearch(text);
+
+        if (!plantData || !Array.isArray(plantData)) {
+            setFilteredPlants([]);
+            return;
+        }
+
+        if (!text.trim()) {
+            setFilteredPlants(plantData);
+            return;
+        }
+
+        const lower = text.toLowerCase();
         const filtered = plantData.filter((plant) =>
-            plant.name.toLowerCase().includes(text.toLowerCase())
+            (plant.title && plant.title.toLowerCase().includes(lower)) ||
+            (plant.commonname && plant.commonname.toLowerCase().includes(lower))
         );
+
         setFilteredPlants(filtered);
     };
 
 
-
-
-    return (<View style={styles.container}>
-        <View style={styles.title}>
-            <Text style={styles.h1}>Planten</Text>
-            <Text style={styles.h2}>Encyclopedie</Text>
-        </View>
-
-        <View style={styles.searchContainer}>
-            <TextInput
-                style={styles.inputSide}
-                placeholder="Search..."
-                value={search}
-                onChangeText={handleSearch}
-            />
-            <View style={styles.listSide}>
-                <FlatList style={styles.filter}
-                          data={data}
-                          keyExtractor={(item) => item}
-                          renderItem={({item}) => <Text style={styles.item}>{item}</Text>}
-                />
-                <FlatList style={styles.filter}
-                          data={data}
-                          keyExtractor={(item) => item}
-                          renderItem={({item}) => <Text style={styles.item}>{item}</Text>}
-                />
+    return (
+        <View style={styles.container}>
+            <View style={styles.title}>
+                <Text style={styles.h1}>Planten</Text>
+                <Text style={styles.h2}>Encyclopedie</Text>
             </View>
 
-        </View>
+            <View style={styles.searchContainer}>
+                <TextInput
+                    style={styles.inputSide}
+                    placeholder="Search..."
+                    value={search}
+                    onChangeText={handleSearch}
+                />
 
 
-        <FlatList
-            data={filteredPlants}
-
-            keyExtractor={(item, index) => index.toString()}
-            contentContainerStyle={{ gap: 10 }}
-            renderItem={({ item }) => (
-                <View style={styles.description1}>
-                    <Text style={styles.h2}>{item.name}</Text>
-                    <View style={styles.description2}>
-                        <View style={styles.column1}>
-                            <Text>{item.description}</Text>
-                        </View>
-                        <View style={styles.column2}>
-                            <Image style={styles.img} source={item.image} />
-                        </View>
-                    </View>
+                <View style={styles.listSide}>
+                    <FlatList
+                        style={styles.filter}
+                        data={filterData}
+                        keyExtractor={(item) => item}
+                        renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
+                    />
+                    <FlatList
+                        style={styles.filter}
+                        data={filterData}
+                        keyExtractor={(item) => item}
+                        renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
+                    />
                 </View>
+                <View>
+                    <Text>Results: {filteredPlants.length}</Text>
+                </View>
+            </View>
+
+            {loading ? (
+                <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />
+            ) : (
+                <FlatList
+                    style={styles.plantsList}
+                    data={filteredPlants}
+                    keyExtractor={(item, index) => index.toString()}
+                    ListEmptyComponent={<Text>No plants found.</Text>}  // 👈 shows if no results
+                    contentContainerStyle={{ gap: 10 }}
+                    renderItem={({ item }) => (
+                        <View style={styles.description1}>
+                            <Text style={styles.h2}>{item.title}</Text>
+                            <View style={styles.description2}>
+                                <View style={styles.column1}>
+                                    <Text>{item.commonname}</Text>
+                                </View>
+                                <View style={styles.column2}>
+                                    <Image
+                                        style={styles.img}
+                                        source={
+                                            item.img
+                                                ? { uri: item.img }
+                                                : require('../assets/plant-temp.png')
+                                        }
+                                        alt={item.img}
+                                    />
+                                </View>
+                            </View>
+                        </View>
+                    )}
+                />
+
             )}
-        />
-
-
-
-        {/*<Switch style={styles.switch}*/}
-        {/*    // value={}*/}
-        {/*    // onValueChange={}*/}
-        {/*>*/}
-
-        {/*</Switch>*/}
-    </View>)
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        // justifyContent: 'center',
     },
-
     title: {
         width: '100%',
+        paddingHorizontal: 20,
     },
-
     searchContainer: {
         width: '100%',
-        height: 100,
+        height: 130,
         marginVertical: 20,
         gap: 10,
+        paddingHorizontal: 20,
+
     },
     inputSide: {
-        flex: 1,
+        flex: 2,
         height: '100%',
         borderColor: '#999',
         borderWidth: 1,
@@ -132,50 +157,34 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 20,
         flex: 1,
-
-
     },
     filter: {
         borderColor: '#ccc',
         borderWidth: 1,
         borderRadius: 30,
     },
-
-    input: {
-        height: 50,
-        borderColor: '#999',
-        borderWidth: 1,
-        borderRadius: 30,
-        paddingHorizontal: 10,
-        marginBottom: 20,
-    },
-
     item: {
         padding: 10,
         fontSize: 18,
         borderBottomWidth: 0.5,
         borderColor: '#ccc',
-        alignItems: 'center',
+        textAlign: 'center',
     },
-
     h1: {
         fontSize: 26,
-        fontWeight: "bold",
+        fontWeight: 'bold',
     },
-
     h2: {
         fontSize: 24,
-        fontWeight: "light",
-        fontStyle: "italic",
+        fontWeight: '300',
+        fontStyle: 'italic',
     },
-
     img: {
         width: 120,
         height: 120,
         borderRadius: 100,
-        objectFit: "fill",
+        resizeMode: 'cover',
     },
-
     description1: {
         width: 370,
         borderRadius: 30,
@@ -183,21 +192,14 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         backgroundColor: 'white',
         gap: 8,
-
-        // iOS shadow
         shadowColor: '#000',
-        shadowOffset: {width: 0, height: 2},
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-
-        // Android shadow
         elevation: 5,
     },
-
     description2: {
-        flexDirection: "row",
-
-
+        flexDirection: 'row',
     },
     column1: {
         flex: 2,
@@ -206,8 +208,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     switch: {
-        alignSelf: "center"
+        alignSelf: 'center',
+    },
+    plantsList: {
+        padding: 10,
     }
 });
-
-
