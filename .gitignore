@@ -1,3 +1,5 @@
 .env
 node_modules
 /.idea/laravel-idea.xml
+/.expo/devices.json
+/.expo/README.md
