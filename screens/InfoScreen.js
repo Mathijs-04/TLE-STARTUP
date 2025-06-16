@@ -30,6 +30,46 @@ export default function InfoScreen({ navigation }) {
 
     }, []);
 
+    const PlantItem = ({ item }) => {
+        const [imageUri, setImageUri] = useState(null);
+
+        useEffect(() => {
+            if (!item.id) return;
+
+            fetch(`http://145.137.55.234:8005/plants/img/${item.id}`)
+                .then(res => res.json())
+                .then(json => {
+                    if (json.url2) {
+                        const fullUrl = `http://145.137.55.234:8005/${json.url2.replace('./', '')}`;
+                        setImageUri(fullUrl);
+                    }
+                })
+                .catch(err => {
+                    console.error(`Image fetch failed for id ${item.id}`, err);
+                });
+        }, [item.id]);
+
+        return (
+            <View style={styles.description1}>
+                <Text style={styles.h2}>{item.title}</Text>
+                <View style={styles.description2}>
+                    <View style={styles.column1}>
+                        <Text>{item.commonname}</Text>
+                    </View>
+                    <View style={styles.column2}>
+                        <Image
+                            style={styles.img}
+                            source={
+                                imageUri
+                                    ? { uri: imageUri }
+                                    : require('../assets/plant-temp.png')
+                            }
+                        />
+                    </View>
+                </View>
+            </View>
+        );
+    };
 
     const handleSearch = (text) => {
         setSearch(text);
@@ -96,30 +136,11 @@ export default function InfoScreen({ navigation }) {
                     style={styles.plantsList}
                     data={filteredPlants}
                     keyExtractor={(item, index) => index.toString()}
-                    ListEmptyComponent={<Text>No plants found.</Text>}  // 👈 shows if no results
+                    ListEmptyComponent={<Text>No plants found.</Text>}
                     contentContainerStyle={{ gap: 10 }}
-                    renderItem={({ item }) => (
-                        <View style={styles.description1}>
-                            <Text style={styles.h2}>{item.title}</Text>
-                            <View style={styles.description2}>
-                                <View style={styles.column1}>
-                                    <Text>{item.commonname}</Text>
-                                </View>
-                                <View style={styles.column2}>
-                                    <Image
-                                        style={styles.img}
-                                        source={
-                                            item.img
-                                                ? { uri: item.img }
-                                                : require('../assets/plant-temp.png')
-                                        }
-                                        alt={item.img}
-                                    />
-                                </View>
-                            </View>
-                        </View>
-                    )}
+                    renderItem={({ item }) => <PlantItem item={item} />}
                 />
+
 
             )}
         </View>
