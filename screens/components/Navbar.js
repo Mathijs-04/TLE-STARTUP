@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 import HomeIcon from '../iconComponents/HomeIcon';
 import PlantIcon from '../iconComponents/PlantIcon';
 import InfoIcon from '../iconComponents/InfoIcon';
@@ -24,6 +23,7 @@ export default function Navbar() {
                     tabBarActiveTintColor: '#fff',
                     tabBarItemStyle: styles.tabBarItemStyle,
                     tabBarShowLabel: false,
+                    headerShown: false,
                 }}
             >
                 <Tab.Screen
