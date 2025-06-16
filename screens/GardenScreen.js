@@ -226,7 +226,7 @@ export default function Garden({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: {flex: 1, backgroundColor: '#FFFFFF', marginBottom: 80},
+    container: {flex: 1, backgroundColor: '#849970', paddingBottom: 80},
     settingsRow: {
         flexDirection: 'row',
         justifyContent: 'center',
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
         borderRadius: 8
     },
     gridButtonText: {color: '#FFFFFF'},
-    gridContainer: {flex: 1, justifyContent: "center", alignItems: 'center', padding: 8},
+    gridContainer: {flex: 1, justifyContent: "center", alignItems: 'center', padding: 8, backgroundColor: '#FFFFFF'},
     row: {flexDirection: 'row'},
     cell: {
         width: 30,
