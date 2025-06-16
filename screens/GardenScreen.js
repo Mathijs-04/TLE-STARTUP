@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -9,18 +9,18 @@ import {
     Alert,
     KeyboardAvoidingView,
     Platform,
-    Clipboard,
     Image
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MATERIALS = {
-    grass: {name: 'Grass', image: require('../assets/materials/grass.webp')},
-    hedge: {name: 'Hedge', image: require('../assets/materials/hedge.webp')},
-    tiles: {name: 'Tiles', image: require('../assets/materials/tiles.webp')},
-    dirt: {name: 'Dirt', image: require('../assets/materials/dirt.webp')},
-    flowers: {name: 'Flowers', image: require('../assets/materials/flowers.webp')},
-    water: {name: 'Water', image: require('../assets/materials/water.webp')},
-    sand: {name: 'Sand', image: require('../assets/materials/sand.webp')},
+    grass: { name: 'Grass', image: require('../assets/materials/grass.webp') },
+    hedge: { name: 'Hedge', image: require('../assets/materials/hedge.webp') },
+    tiles: { name: 'Tiles', image: require('../assets/materials/tiles.webp') },
+    dirt: { name: 'Dirt', image: require('../assets/materials/dirt.webp') },
+    flowers: { name: 'Flowers', image: require('../assets/materials/flowers.webp') },
+    water: { name: 'Water', image: require('../assets/materials/water.webp') },
+    sand: { name: 'Sand', image: require('../assets/materials/sand.webp') },
 };
 
 const MATERIAL_CODES = {
@@ -38,23 +38,28 @@ const CODE_TO_MATERIAL = Object.fromEntries(
     Object.entries(MATERIAL_CODES).map(([key, value]) => [value, key])
 );
 
-export default function Garden({navigation}) {
+export default function Garden({ navigation }) {
     const [grid, setGrid] = useState([]);
     const [rows, setRows] = useState(10);
     const [cols, setCols] = useState(10);
     const [selectedMaterial, setSelectedMaterial] = useState('grass');
     const [mode, setMode] = useState('brush');
-    const [importString, setImportString] = useState('');
-    const [showImport, setShowImport] = useState(false);
-    const [exportString, setExportString] = useState('');
-    const [showExport, setShowExport] = useState(false);
+    const [saveCount, setSaveCount] = useState(0);
+
+    useEffect(() => {
+        (async () => {
+            const keys = await AsyncStorage.getAllKeys();
+            const gardenKeys = keys.filter(k => k.startsWith('garden_'));
+            setSaveCount(gardenKeys.length);
+        })();
+    }, []);
 
     const initializeGrid = () => {
         const newGrid = [];
         for (let i = 0; i < rows; i++) {
             const row = [];
             for (let j = 0; j < cols; j++) {
-                row.push({material: 'empty', key: `${i}-${j}`});
+                row.push({ material: 'empty', key: `${i}-${j}` });
             }
             newGrid.push(row);
         }
@@ -69,9 +74,9 @@ export default function Garden({navigation}) {
             const newRow = [...newGrid[rowIndex]];
 
             if (mode === 'eraser') {
-                newRow[colIndex] = {...newRow[colIndex], material: 'empty'};
+                newRow[colIndex] = { ...newRow[colIndex], material: 'empty' };
             } else {
-                newRow[colIndex] = {...newRow[colIndex], material: selectedMaterial};
+                newRow[colIndex] = { ...newRow[colIndex], material: selectedMaterial };
             }
 
             newGrid[rowIndex] = newRow;
@@ -79,14 +84,21 @@ export default function Garden({navigation}) {
         });
     };
 
-    const exportGrid = () => {
+    const eraseAll = () => {
+        setGrid(prev => prev.map(row => row.map(cell => ({ ...cell, material: 'empty' }))));
+    };
+
+    const fillAll = () => {
+        setGrid(prev => prev.map(row => row.map(cell => ({ ...cell, material: selectedMaterial }))));
+    };
+
+    const saveGarden = async () => {
         if (!grid.length) {
-            Alert.alert('Export Failed', 'No grid to export.');
+            Alert.alert('Save Failed', 'No grid to save.');
             return;
         }
 
         const exportArray = [];
-
         grid.forEach((row, rowIndex) => {
             row.forEach((cell, colIndex) => {
                 if (cell.material !== 'empty') {
@@ -102,55 +114,10 @@ export default function Garden({navigation}) {
             data: exportArray
         };
 
-        const jsonString = JSON.stringify(exportObject, null, 2);
-        setExportString(jsonString);
-        setShowExport(true);
-    };
-
-    const copyToClipboard = () => {
-        Clipboard.setString(exportString);
-        Alert.alert('Copied', 'Exported JSON copied to clipboard!');
-    };
-
-    const eraseAll = () => {
-        setGrid(prev => prev.map(row => row.map(cell => ({...cell, material: 'empty'}))));
-    };
-
-    const fillAll = () => {
-        setGrid(prev => prev.map(row => row.map(cell => ({...cell, material: selectedMaterial}))));
-    };
-
-    const importGrid = () => {
-        try {
-            const obj = JSON.parse(importString);
-            if (!obj.rows || !obj.cols || !Array.isArray(obj.data)) {
-                Alert.alert('Import Error', 'Invalid format.');
-                return;
-            }
-
-            const newGrid = [];
-            for (let i = 0; i < obj.rows; i++) {
-                const row = [];
-                for (let j = 0; j < obj.cols; j++) {
-                    row.push({material: 'empty', key: `${i}-${j}`});
-                }
-                newGrid.push(row);
-            }
-
-            obj.data.forEach(entry => {
-                const [r, c, code] = entry.split('.');
-                if (newGrid[r] && newGrid[r][c] && CODE_TO_MATERIAL[code]) {
-                    newGrid[r][c].material = CODE_TO_MATERIAL[code];
-                }
-            });
-
-            setRows(obj.rows);
-            setCols(obj.cols);
-            setGrid(newGrid);
-            Alert.alert('Import Successful', 'Grid imported.');
-        } catch (error) {
-            Alert.alert('Import Error', 'Invalid JSON.');
-        }
+        const newSaveNumber = saveCount + 1;
+        await AsyncStorage.setItem(`garden_${newSaveNumber}`, JSON.stringify(exportObject));
+        setSaveCount(newSaveNumber);
+        Alert.alert('Saved', `Garden ${newSaveNumber} saved.`);
     };
 
     return (
@@ -159,19 +126,19 @@ export default function Garden({navigation}) {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
             <View style={styles.settingsRow}>
-                <Text style={styles.barText}>B:</Text>
+                <Text style={styles.barText}>L:</Text>
                 <TextInput
                     style={styles.input}
                     keyboardType="numeric"
                     placeholder="Rows"
                     value={rows.toString()}
                     onChangeText={(text) => {
-                        const value = Math.max(1, Math.min(15, parseInt(text) || 0));
+                        const value = Math.max(1, Math.min(13, parseInt(text) || 0));
                         setRows(value);
                     }}
                 />
                 <Text style={styles.barText}>m </Text>
-                <Text style={styles.barText}>   L:</Text>
+                <Text style={styles.barText}>   B:</Text>
                 <TextInput
                     style={styles.input}
                     keyboardType="numeric"
@@ -217,8 +184,7 @@ export default function Garden({navigation}) {
             </View>
 
             <View style={styles.toolbarContainer}>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}
-                            contentContainerStyle={styles.materialRow}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.materialRow}>
                     {Object.entries(MATERIALS).map(([key, material]) => (
                         <TouchableOpacity
                             key={key}
@@ -231,7 +197,7 @@ export default function Garden({navigation}) {
                                 setMode('brush');
                             }}
                         >
-                            <Image source={material.image} style={styles.toolbarImage} resizeMode="cover"/>
+                            <Image source={material.image} style={styles.toolbarImage} resizeMode="cover" />
                             <Text style={styles.materialText}>{material.name}</Text>
                         </TouchableOpacity>
                     ))}
@@ -250,55 +216,17 @@ export default function Garden({navigation}) {
                     <TouchableOpacity style={styles.toolButton} onPress={fillAll}>
                         <Text style={styles.toolText}>Vul Alles</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.toolButton} onPress={exportGrid}>
-                        <Text style={styles.toolText}>Export</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.toolButton}
-                        onPress={() => {
-                            if (showImport) importGrid();
-                            setShowImport(!showImport);
-                        }}
-                    >
-                        <Text style={styles.toolText}>{showImport ? 'Confirm' : 'Import'}</Text>
+                    <TouchableOpacity style={styles.toolButton} onPress={saveGarden}>
+                        <Text style={styles.toolText}>Save</Text>
                     </TouchableOpacity>
                 </View>
             </View>
-
-            {showImport && (
-                <KeyboardAvoidingView
-                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                    style={{ width: '100%' }}
-                >
-                    <TextInput
-                        style={styles.importInput}
-                        value={importString}
-                        onChangeText={setImportString}
-                        placeholder="Paste JSON here"
-                        multiline
-                    />
-                </KeyboardAvoidingView>
-            )}
-
-            {showExport && (
-                <View style={styles.exportPopup}>
-                    <ScrollView style={{ maxHeight: 200 }}>
-                        <Text style={styles.exportText}>{exportString}</Text>
-                    </ScrollView>
-                    <TouchableOpacity style={styles.copyButton} onPress={copyToClipboard}>
-                        <Text style={styles.copyButtonText}>Copy to Clipboard</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.copyButton} onPress={() => setShowExport(false)}>
-                        <Text style={styles.copyButtonText}>Close</Text>
-                    </TouchableOpacity>
-                </View>
-            )}
         </KeyboardAvoidingView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {flex: 1, backgroundColor: '#FFFFFF', marginBottom: 80},
+    container: {flex: 1, backgroundColor: '#849970', paddingBottom: 80},
     settingsRow: {
         flexDirection: 'row',
         justifyContent: 'center',
@@ -328,7 +256,7 @@ const styles = StyleSheet.create({
         borderRadius: 8
     },
     gridButtonText: {color: '#FFFFFF'},
-    gridContainer: {flex: 1, justifyContent: "center", alignItems: 'center', padding: 8},
+    gridContainer: {flex: 1, justifyContent: "center", alignItems: 'center', padding: 8, backgroundColor: '#FFFFFF'},
     row: {flexDirection: 'row'},
     cell: {
         width: 30,
@@ -392,3 +320,4 @@ const styles = StyleSheet.create({
     },
     copyButtonText: {color: '#FFFFFF', textAlign: 'center'}
 });
+
