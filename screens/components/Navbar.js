@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeIcon from '../iconComponents/HomeIcon';
 import PlantIcon from '../iconComponents/PlantIcon';
@@ -14,14 +14,15 @@ const Tab = createBottomTabNavigator();
 
 export default function Navbar() {
     return (
-        <NavigationContainer>
+        <NavigationContainer theme={MyTheme}>
             <Tab.Navigator
                 initialRouteName="Home"
                 screenOptions={{
                     headerStyle: styles.headerStyle,
                     tabBarStyle: styles.tabBarStyle,
-                    tabBarInactiveTintColor: '#fff',
-                    tabBarActiveTintColor: '#fff',
+                    tabBarInactiveTintColor: '#ffffff',
+                    tabBarActiveTintColor: '#ffffff',
+                    backgroundColor: '#ffffff',
                     tabBarItemStyle: styles.tabBarItemStyle,
                     tabBarShowLabel: false,
                     headerShown: false,
@@ -85,6 +86,14 @@ export default function Navbar() {
         </NavigationContainer>
     );
 }
+
+const MyTheme = {
+    ...DefaultTheme,
+    colors: {
+        ...DefaultTheme.colors,
+        background: '#FFFFFF', // Set background to white
+    },
+};
 
 const styles = StyleSheet.create({
     tabBarStyle: {
