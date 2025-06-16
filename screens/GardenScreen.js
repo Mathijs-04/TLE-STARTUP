@@ -121,115 +121,117 @@ export default function Garden({ navigation }) {
     };
 
     return (
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        >
-            <View style={styles.settingsRow}>
-                <Text style={styles.barText}>L:</Text>
-                <TextInput
-                    style={styles.input}
-                    keyboardType="numeric"
-                    placeholder="Rows"
-                    value={rows.toString()}
-                    onChangeText={(text) => {
-                        const value = Math.max(1, Math.min(13, parseInt(text) || 0));
-                        setRows(value);
-                    }}
-                />
-                <Text style={styles.barText}>m </Text>
-                <Text style={styles.barText}>   B:</Text>
-                <TextInput
-                    style={styles.input}
-                    keyboardType="numeric"
-                    placeholder="Cols"
-                    value={cols.toString()}
-                    onChangeText={(text) => {
-                        const value = Math.max(1, Math.min(15, parseInt(text) || 0));
-                        setCols(value);
-                    }}
-                />
-                <Text style={styles.barText}>m    </Text>
-                <TouchableOpacity style={styles.gridButton} onPress={initializeGrid}>
-                    <Text style={styles.gridButtonText}>Maak tuin</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View style={styles.gridContainer}>
-                {grid.length > 0 ? (
-                    grid.map((row, rowIndex) => (
-                        <View key={`row-${rowIndex}`} style={styles.row}>
-                            {row.map((cell, colIndex) => (
-                                <TouchableOpacity
-                                    key={cell.key}
-                                    style={styles.cell}
-                                    onPress={() => handleCellTap(rowIndex, colIndex)}
-                                >
-                                    {cell.material !== 'empty' && (
-                                        <Image
-                                            source={MATERIALS[cell.material].image}
-                                            style={styles.materialImage}
-                                            resizeMode="cover"
-                                        />
-                                    )}
-                                </TouchableOpacity>
-                            ))}
-                        </View>
-                    ))
-                ) : (
-                    <View style={styles.emptyGrid}>
-                        <Text style={styles.emptyText}>Create a grid to start</Text>
-                    </View>
-                )}
-            </View>
-
-            <View style={styles.toolbarContainer}>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.materialRow}>
-                    {Object.entries(MATERIALS).map(([key, material]) => (
-                        <TouchableOpacity
-                            key={key}
-                            style={[
-                                styles.materialButton,
-                                selectedMaterial === key && styles.selectedMaterial
-                            ]}
-                            onPress={() => {
-                                setSelectedMaterial(key);
-                                setMode('brush');
-                            }}
-                        >
-                            <Image source={material.image} style={styles.toolbarImage} resizeMode="cover" />
-                            <Text style={styles.materialText}>{material.name}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </ScrollView>
-
-                <View style={styles.actionRow}>
-                    <TouchableOpacity
-                        style={[styles.toolButton, mode === 'eraser' && styles.activeTool]}
-                        onPress={() => setMode('eraser')}
-                    >
-                        <Text style={styles.toolText}>Gum</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.toolButton} onPress={eraseAll}>
-                        <Text style={styles.toolText}>Gum Alles</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.toolButton} onPress={fillAll}>
-                        <Text style={styles.toolText}>Vul Alles</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.toolButton} onPress={saveGarden}>
-                        <Text style={styles.toolText}>Save</Text>
+        <View style={{ flex: 1, backgroundColor: '#849970', paddingBottom: 80 }}>
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            >
+                <View style={styles.settingsRow}>
+                    <Text style={styles.barText}>L:</Text>
+                    <TextInput
+                        style={styles.input}
+                        keyboardType="numeric"
+                        placeholder="Rows"
+                        value={rows.toString()}
+                        onChangeText={(text) => {
+                            const value = Math.max(1, Math.min(13, parseInt(text) || 0));
+                            setRows(value);
+                        }}
+                    />
+                    <Text style={styles.barText}>m </Text>
+                    <Text style={styles.barText}>   B:</Text>
+                    <TextInput
+                        style={styles.input}
+                        keyboardType="numeric"
+                        placeholder="Cols"
+                        value={cols.toString()}
+                        onChangeText={(text) => {
+                            const value = Math.max(1, Math.min(15, parseInt(text) || 0));
+                            setCols(value);
+                        }}
+                    />
+                    <Text style={styles.barText}>m    </Text>
+                    <TouchableOpacity style={styles.gridButton} onPress={initializeGrid}>
+                        <Text style={styles.gridButtonText}>Maak tuin</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
-        </KeyboardAvoidingView>
+
+                <View style={styles.gridContainer}>
+                    {grid.length > 0 ? (
+                        grid.map((row, rowIndex) => (
+                            <View key={`row-${rowIndex}`} style={styles.row}>
+                                {row.map((cell, colIndex) => (
+                                    <TouchableOpacity
+                                        key={cell.key}
+                                        style={styles.cell}
+                                        onPress={() => handleCellTap(rowIndex, colIndex)}
+                                    >
+                                        {cell.material !== 'empty' && (
+                                            <Image
+                                                source={MATERIALS[cell.material].image}
+                                                style={styles.materialImage}
+                                                resizeMode="cover"
+                                            />
+                                        )}
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        ))
+                    ) : (
+                        <View style={styles.emptyGrid}>
+                            <Text style={styles.emptyText}>Create a grid to start</Text>
+                        </View>
+                    )}
+                </View>
+
+                <View style={styles.toolbarContainer}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.materialRow}>
+                        {Object.entries(MATERIALS).map(([key, material]) => (
+                            <TouchableOpacity
+                                key={key}
+                                style={[
+                                    styles.materialButton,
+                                    selectedMaterial === key && styles.selectedMaterial
+                                ]}
+                                onPress={() => {
+                                    setSelectedMaterial(key);
+                                    setMode('brush');
+                                }}
+                            >
+                                <Image source={material.image} style={styles.toolbarImage} resizeMode="cover" />
+                                <Text style={styles.materialText}>{material.name}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+
+                    <View style={styles.actionRow}>
+                        <TouchableOpacity
+                            style={[styles.toolButton, mode === 'eraser' && styles.activeTool]}
+                            onPress={() => setMode('eraser')}
+                        >
+                            <Text style={styles.toolText}>Gum</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.toolButton} onPress={eraseAll}>
+                            <Text style={styles.toolText}>Gum Alles</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.toolButton} onPress={fillAll}>
+                            <Text style={styles.toolText}>Vul Alles</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.toolButton} onPress={saveGarden}>
+                            <Text style={styles.toolText}>Save</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </KeyboardAvoidingView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#849970',
-        paddingBottom: 80
+        backgroundColor: '#849970'
+        // We removed paddingBottom from here — it's now applied in the outer View
     },
     settingsRow: {
         flexDirection: 'row',
@@ -252,16 +254,22 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         textAlign: 'center'
     },
-    barText: {color: 'white'},
+    barText: { color: 'white' },
     gridButton: {
         backgroundColor: '#455736',
         paddingHorizontal: 14,
         paddingVertical: 8,
         borderRadius: 8
     },
-    gridButtonText: {color: '#FFFFFF'},
-    gridContainer: {flex: 1, justifyContent: "center", alignItems: 'center', padding: 8, backgroundColor: '#FFFFFF'},
-    row: {flexDirection: 'row'},
+    gridButtonText: { color: '#FFFFFF' },
+    gridContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: 'center',
+        padding: 8,
+        backgroundColor: '#FFFFFF'
+    },
+    row: { flexDirection: 'row' },
     cell: {
         width: 30,
         height: 30,
@@ -270,11 +278,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    materialImage: {width: 28, height: 28},
-    emptyGrid: {flex: 1, justifyContent: 'center', alignItems: 'center'},
-    emptyText: {color: '#999999'},
-    toolbarContainer: {padding: 8, backgroundColor: '#849970'},
-    materialRow: {flexDirection: 'row', alignItems: 'center'},
+    materialImage: { width: 28, height: 28 },
+    emptyGrid: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+    emptyText: { color: '#999999' },
+    toolbarContainer: { padding: 8, backgroundColor: '#849970' },
+    materialRow: { flexDirection: 'row', alignItems: 'center' },
     materialButton: {
         width: 60,
         height: 60,
@@ -284,17 +292,17 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: '#455736'
     },
-    selectedMaterial: {borderWidth: 2, borderColor: '#FFFFFF'},
-    toolbarImage: {width: 40, height: 40},
-    materialText: {fontSize: 10, textAlign: 'center', color: 'white'},
-    actionRow: {flexDirection: 'row', justifyContent: 'space-around', marginTop: 8},
+    selectedMaterial: { borderWidth: 2, borderColor: '#FFFFFF' },
+    toolbarImage: { width: 40, height: 40 },
+    materialText: { fontSize: 10, textAlign: 'center', color: 'white' },
+    actionRow: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 8 },
     toolButton: {
         backgroundColor: '#455736',
         padding: 8,
         borderRadius: 8
     },
-    activeTool: {backgroundColor: '#FF9800'},
-    toolText: {color: '#FFFFFF'},
+    activeTool: { backgroundColor: '#FF9800' },
+    toolText: { color: '#FFFFFF' },
     importInput: {
         height: 100,
         margin: 8,
@@ -315,13 +323,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#999'
     },
-    exportText: {color: '#000'},
+    exportText: { color: '#000' },
     copyButton: {
         backgroundColor: '#455736',
         padding: 8,
         borderRadius: 8,
         marginTop: 8
     },
-    copyButtonText: {color: '#FFFFFF', textAlign: 'center'}
+    copyButtonText: { color: '#FFFFFF', textAlign: 'center' }
 });
-
