@@ -46,7 +46,7 @@ export default function Navbar() {
                     }}
                 />
                 <Tab.Screen
-                    name="Garden"
+                    name="Jouw Tuin"
                     component={GardenScreen}
                     options={{
                         tabBarIcon: ({ color, size, focused }) => (
@@ -64,7 +64,7 @@ export default function Navbar() {
                     }}
                 />
                 <Tab.Screen
-                    name="Info"
+                    name="Encyclopedie"
                     component={PlantDetails}
                     options={{
                         tabBarIcon: ({ color, size, focused }) => (
