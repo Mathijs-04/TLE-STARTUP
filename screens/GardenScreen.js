@@ -126,19 +126,19 @@ export default function Garden({ navigation }) {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
             <View style={styles.settingsRow}>
-                <Text style={styles.barText}>B:</Text>
+                <Text style={styles.barText}>L:</Text>
                 <TextInput
                     style={styles.input}
                     keyboardType="numeric"
                     placeholder="Rows"
                     value={rows.toString()}
                     onChangeText={(text) => {
-                        const value = Math.max(1, Math.min(15, parseInt(text) || 0));
+                        const value = Math.max(1, Math.min(13, parseInt(text) || 0));
                         setRows(value);
                     }}
                 />
                 <Text style={styles.barText}>m </Text>
-                <Text style={styles.barText}>   L:</Text>
+                <Text style={styles.barText}>   B:</Text>
                 <TextInput
                     style={styles.input}
                     keyboardType="numeric"
