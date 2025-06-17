@@ -10,6 +10,11 @@ import {
     Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { createStackNavigator } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
+
+
+
 
 // ✅ SVG iconen
 import AddIcon from './iconComponents/CustomPlusIcon';
@@ -58,7 +63,7 @@ const QuickAccessButton = ({ IconComponent, title, onPress }) => (
     </TouchableOpacity>
 );
 
-const Homepage = () => (
+const Homepage = ({ navigation }) => (
     <SafeAreaView style={styles.container}>
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
             {/* Welkom */}
@@ -103,17 +108,17 @@ const Homepage = () => (
                 <QuickAccessButton
                     IconComponent={AddIcon}
                     title="Nieuwe tuin"
-                    onPress={() => {}}
+                    onPress={() => navigation.navigate('Garden')}
                 />
                 <QuickAccessButton
                     IconComponent={BookIcon}
                     title="Encyclopedie"
-                    onPress={() => {}}
+                    onPress={() => navigation.navigate('Encyclopedia')}
                 />
                 <QuickAccessButton
                     IconComponent={WaterIcon}
                     title="ECO Tips"
-                    onPress={() => {}}
+                    onPress={() => navigation.navigate('EcoTips')}
                 />
             </View>
 
@@ -125,7 +130,7 @@ const Homepage = () => (
                         Wist je dat je regenwater het beste vroeg in de ochtend kunt gebruiken?
                         Zo verdampt er minder water én krijgen je planten optimaal vocht.
                     </Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('EcoTips')}>
                         <Text style={styles.readMoreLink}>Lees meer...</Text>
                     </TouchableOpacity>
                 </View>
