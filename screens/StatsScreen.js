@@ -13,7 +13,7 @@ export default function StatsScreen({navigation}) {
 
     const url = '145.137.58.190';
     const INITIAL_PAGE = 1;
-    const PAGE_LIMIT = 5; // Aantal planten dat onder stats wordt getoond
+    const PAGE_LIMIT = 5;
 
     useFocusEffect(
         useCallback(() => {
