@@ -1,9 +1,17 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import Sun from './iconComponents/SunIcon';
+import HalfSunIcon from "./iconComponents/HalfSunIcon";
+import ShadowIcon from "./iconComponents/ShadowIcon";
 
 export default function PlantDetails({navigation, route}) {
 
     const { plant } = route.params;
+
+    const Chalk = require('../assets/soilTypes/chalk.png');
+    const Clay = require('../assets/soilTypes/clay.png');
+    const Loam = require('../assets/soilTypes/loam.png');
+    const Sand = require('../assets/soilTypes/sand.png');
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -53,21 +61,46 @@ export default function PlantDetails({navigation, route}) {
 
 
                 {/* Sun requirements */}
-                <Text style={styles.sectionTitleLarge}>Zon vereisten</Text>
+                <Text style={styles.sectionTitleLarge}>Licht Vereisten:</Text>
                 <View style={styles.iconRow}>
-                    <View style={[styles.iconCircle, { backgroundColor: '#F3FF33' }]} />
+                    {plant.lightrequirements.includes(1) && (
+                        <View style={styles.iconWithLabel}>
+                            <Sun />
+                            <Text style={styles.iconLabel}>Zon</Text>
+                        </View>
+                    )}
+                    {plant.lightrequirements.includes(2) && (
+                        <View style={styles.iconWithLabel}>
+                            <HalfSunIcon />
+                            <Text style={styles.iconLabel}>Halfschaduw</Text>
+                        </View>
+                    )}
+                    {plant.lightrequirements.includes(3) && (
+                        <View style={styles.iconWithLabel}>
+                            <ShadowIcon />
+                            <Text style={styles.iconLabel}>Schaduw</Text>
+                        </View>
+                    )}
                 </View>
 
                 {/* Soil requirements */}
                 <Text style={styles.sectionTitleLarge}>Grond vereisten</Text>
                 <View style={styles.soilRow}>
-                    {['Klei', 'Kalk', 'Leem', 'Zand'].map((type, idx) => (
-                        <View key={idx} style={styles.soilItem}>
-                            <View style={styles.soilCircle} />
-                            <Text style={styles.soilText}>{type}</Text>
-                        </View>
+                    {[
+                        { id: 3, label: 'Klei', image: Clay },
+                        { id: 1, label: 'Kalk', image: Chalk },
+                        { id: 2, label: 'Leem', image: Loam },
+                        { id: 4, label: 'Zand', image: Sand },
+                    ].map((soil, idx) => (
+                        plant.soilrequirements.includes(soil.id) && (
+                            <View key={idx} style={styles.soilItem}>
+                                <Image source={soil.image} style={styles.soilCircle} />
+                                <Text style={styles.soilText}>{soil.label}</Text>
+                            </View>
+                        )
                     ))}
                 </View>
+
 
                 {/* Description */}
                 <Text style={styles.sectionTitleLarge}>Informatie</Text>
@@ -148,8 +181,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 30,
         right: -10,
-        width: 150,
-        height: 150,
+        width: 120,
+        height: 120,
         borderRadius: 100,
         backgroundColor: '#CCD3C5',
         display: 'flex',
@@ -157,16 +190,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     image: {
-        width: '100%',
-        height: '100%',
-        top: '-30',
+        width: '125%',
+        height: '125%',
+        top: '-15',
     },
 
     blurredImage: {
         position: 'absolute',
-        width: '110%',
-        height: '110%',
-        top: '-36',
+        width: '130%',
+        height: '130%',
+        top: '-30',
         opacity: 1,
         zIndex: 0,
     },
@@ -208,8 +241,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     soilCircle: {
-        width: 30,
-        height: 30,
+        width: 40,
+        height: 40,
         backgroundColor: '#eee',
         borderRadius: 15,
         marginBottom: 5,
@@ -233,5 +266,14 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: '600',
         fontSize: 16,
+    },
+    iconWithLabel: {
+        alignItems: 'center',
+        marginHorizontal: 10, // spacing between icons
+    },
+    iconLabel: {
+        marginTop: 4,
+        fontSize: 12,
+        color: '#333', // or whatever fits your design
     },
 });

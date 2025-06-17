@@ -57,6 +57,7 @@ export default function TestScreen({navigation}) {
                 'lightrequirements',
                 'exposure',
                 'pollinators',
+                'soilrequirements',
                 'planttext',
                 'plantpollinatorstext',
                 'plantpropagation',
