@@ -145,7 +145,7 @@ export default function PlantDetails({navigation, route}) {
 
 
                 {/* Back button */}
-                <TouchableOpacity style={styles.backButton}>
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <Text style={styles.backButtonText}>Terug</Text>
                 </TouchableOpacity>
             </View>
