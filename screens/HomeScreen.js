@@ -131,6 +131,7 @@ const Homepage = () => (
                 </View>
                 <View style={styles.tipImage}>
                     <Image
+                        // source={require('../assets/images/purple_flower_image.png')}r
                         // source={require('../assets/images/purple_flower_image.png')}
                         style={styles.flowerImage}
                         resizeMode="contain"
