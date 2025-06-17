@@ -1,30 +1,31 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 import HomeIcon from '../iconComponents/HomeIcon';
 import PlantIcon from '../iconComponents/PlantIcon';
 import InfoIcon from '../iconComponents/InfoIcon';
 import HomeScreen from '../HomeScreen';
 import GardenScreen from '../GardenScreen';
-import FormScreen from '../FormScreen';
 import InfoScreen from '../InfoScreen';
+import PlantDetails from "../InfoDetail";
 
 const Tab = createBottomTabNavigator();
 
 export default function Navbar() {
     return (
-        <NavigationContainer>
+        <NavigationContainer theme={MyTheme}>
             <Tab.Navigator
                 initialRouteName="Home"
                 screenOptions={{
                     headerStyle: styles.headerStyle,
                     tabBarStyle: styles.tabBarStyle,
-                    tabBarInactiveTintColor: '#fff',
-                    tabBarActiveTintColor: '#fff',
+                    tabBarInactiveTintColor: '#ffffff',
+                    tabBarActiveTintColor: '#ffffff',
+                    backgroundColor: '#ffffff',
                     tabBarItemStyle: styles.tabBarItemStyle,
                     tabBarShowLabel: false,
+                    headerShown: true,
                 }}
             >
                 <Tab.Screen
@@ -46,7 +47,7 @@ export default function Navbar() {
                     }}
                 />
                 <Tab.Screen
-                    name="Garden"
+                    name="Jouw Tuin"
                     component={GardenScreen}
                     options={{
                         tabBarIcon: ({ color, size, focused }) => (
@@ -64,8 +65,8 @@ export default function Navbar() {
                     }}
                 />
                 <Tab.Screen
-                    name="Info"
-                    component={FormScreen}
+                    name="Encyclopedie"
+                    component={PlantDetails}
                     options={{
                         tabBarIcon: ({ color, size, focused }) => (
                             <View style={styles.tabIconWrapper}>
@@ -85,6 +86,14 @@ export default function Navbar() {
         </NavigationContainer>
     );
 }
+
+const MyTheme = {
+    ...DefaultTheme,
+    colors: {
+        ...DefaultTheme.colors,
+        background: '#FFFFFF', // Set background to white
+    },
+};
 
 const styles = StyleSheet.create({
     tabBarStyle: {
