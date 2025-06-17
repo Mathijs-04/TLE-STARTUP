@@ -1,125 +1,147 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity, Image} from 'react-native';
+import React, {useEffect, useState, useCallback} from 'react';
+import {
+    View,
+    Text,
+    StyleSheet,
+    FlatList,
+    TouchableOpacity,
+    Image,
+    ActivityIndicator,
+} from 'react-native';
 
 export default function TestScreen({navigation}) {
-    const [PlantData, setPlantData] = useState({});
+    const [plantData, setPlantData] = useState({});
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
 
-    const url = '145.137.58.190'
+    const url = '145.137.58.190';
 
-    useEffect(() => {
-        // First fetch: plant data
-        fetch(`http://${url}:8001/plants`, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-            },
-        })
-            .then((res) => res.json())
-            .then((json) => {
-                const plants = json.plants;
-                const keysToKeep = [
-                    'title',
-                    'botanicalname',
-                    'commonname',
-                    'othername',
-                    'region',
-                    'flowercolour',
-                    'foliagecolour',
-                    'soilph',
-                    'lightrequirements',
-                    'exposure',
-                    'pollinators',
-                    'planttext',
-                    'plantpollinatorstext',
-                    'plantpropagation',
-                    'plantcultivation',
-                    'plantpests',
-                    'plantmaintenance',
-                    'plantcategory',
-                    'slug',
-                    'id',
-                ];
+    const INITIAL_PAGE = 1;
+    const PAGE_LIMIT = 10; // 👈 Easily change how many items load per page
 
-                const simplified = {};
+    const fetchPlants = useCallback(async (pageNumber) => {
+        if (loading || !hasMore) return;
 
-                for (const plantId in plants) {
-                    const plant = plants[plantId];
-                    simplified[plantId] = {};
+        setLoading(true);
 
-                    keysToKeep.forEach((key) => {
-                        simplified[plantId][key] = plant[key];
-                    });
-                }
-
-                // Second fetch: image URLs
-                fetch(`http://${url}:8001/plants/url/all`, {
+        try {
+            const plantRes = await fetch(
+                `http://${url}:8001/plants?page=${pageNumber}&limit=${PAGE_LIMIT}`,
+                {
                     method: 'GET',
                     headers: {
                         Accept: 'application/json',
                     },
-                })
-                    .then((res) => res.json())
-                    .then((imageData) => {
-                        for (const plantId in imageData) {
-                            if (simplified[plantId]) {
-                                simplified[plantId].imageUrl = `https://greenberrystudio.com/images/${imageData[plantId].url.replace('./public/images/', '')}`;
-                                simplified[plantId].imageUrl2 = `https://greenberrystudio.com/images/${imageData[plantId].url2.replace('./public/images/', '')}`;
-                                if (imageData[plantId].url3) {
-                                    simplified[plantId].imageUrl3 = `https://greenberrystudio.com/images/${imageData[plantId].url3.replace('./public/images/', '')}`;
-                                }
-                            }
-                            /*
-                            OLD CODE FOR FETCHING FROM BACK-END DOES NOT WORK SADLY CAUSE HTTP
-                            if (simplified[plantId]) {
-                                simplified[plantId].imageUrl = `http://${url}:8001/${imageData[plantId].url.replace('./', '')}`;
-                                simplified[plantId].imageUrl2 = `http://${url}:8001/${imageData[plantId].url2.replace('./', '')}`;
-                                if(imageData[plantId].url3){
-                                    simplified[plantId].imageUrl3 = `http://${url}:8001/${imageData[plantId].url3.replace('./', '')}`;
-                                }
-                            }
+                }
+            );
 
-                             */
-                        }
+            const plantJson = await plantRes.json();
+            const plants = plantJson.plants;
 
-                        setPlantData(simplified);
-                        console.log(simplified['1']);
-                    })
-                    .catch((err) => {
-                        console.error('Image fetch error:', err);
-                        setPlantData(simplified); // Still show base data even if image fetch fails
-                    });
-            })
-            .catch((err) => {
-                console.error('Fetch error:', err);
-            });
+            if (!plants || Object.keys(plants).length === 0) {
+                setHasMore(false);
+                setLoading(false);
+                return;
+            }
+
+            const keysToKeep = [
+                'title',
+                'botanicalname',
+                'commonname',
+                'othername',
+                'region',
+                'flowercolour',
+                'foliagecolour',
+                'soilph',
+                'lightrequirements',
+                'exposure',
+                'pollinators',
+                'planttext',
+                'plantpollinatorstext',
+                'plantpropagation',
+                'plantcultivation',
+                'plantpests',
+                'plantmaintenance',
+                'plantcategory',
+                'slug',
+                'id',
+            ];
+
+            const simplified = {};
+            for (const plantId in plants) {
+                const plant = plants[plantId];
+                simplified[plantId] = {};
+
+                keysToKeep.forEach((key) => {
+                    simplified[plantId][key] = plant[key];
+                });
+            }
+
+            const imageRes = await fetch(`http://${url}:8001/plants/url/all`);
+            const imageData = await imageRes.json();
+
+            for (const plantId in imageData) {
+                if (simplified[plantId]) {
+                    simplified[plantId].imageUrl = `https://greenberrystudio.com/images/${imageData[plantId].url.replace('./public/images/', '')}`;
+                    simplified[plantId].imageUrl2 = `https://greenberrystudio.com/images/${imageData[plantId].url2.replace('./public/images/', '')}`;
+                    if (imageData[plantId].url3) {
+                        simplified[plantId].imageUrl3 = `https://greenberrystudio.com/images/${imageData[plantId].url3.replace('./public/images/', '')}`;
+                    }
+                }
+            }
+
+            setPlantData((prev) => ({
+                ...prev,
+                ...simplified,
+            }));
+
+            setPage((prev) => prev + 1);
+        } catch (err) {
+            console.error('Fetch error:', err);
+        } finally {
+            setLoading(false);
+        }
+    }, [loading, hasMore]);
+
+    useEffect(() => {
+        fetchPlants(INITIAL_PAGE);
     }, []);
 
-    return (
-        <ScrollView contentContainerStyle={styles.container}>
-            {Object.entries(PlantData).map(([id, plant]) => (
-                <View key={id} style={styles.card}>
-                    <View style={styles.textSection}>
-                        <Text style={styles.title}>{plant.commonname}</Text>
-                        <Text style={styles.botanicalName}>{plant.botanicalname}</Text>
-                        <Text style={styles.plantText}>{plant.planttext}</Text>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('PlantDetails', {plant})}
-                        >
-                            <Text style={styles.readMore}>Lees meer…</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.imageWrapper}>
-                        <View style={styles.circle}>
-                            <Image
-                                source={{uri: plant.imageUrl2}}
-                                style={styles.image}
-                                resizeMode="contain"
-                            />
-                        </View>
-                    </View>
+    const renderItem = ({item}) => (
+        <View key={item.id} style={styles.card}>
+            <View style={styles.textSection}>
+                <Text style={styles.title}>{item.commonname}</Text>
+                <Text style={styles.botanicalName}>{item.botanicalname}</Text>
+                <Text style={styles.plantText}>{item.planttext}</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('PlantDetails', {plant: item})}>
+                    <Text style={styles.readMore}>Lees meer…</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.imageWrapper}>
+                <View style={styles.circle}>
+                    <Image
+                        source={{uri: item.imageUrl2}}
+                        style={styles.image}
+                        resizeMode="contain"
+                    />
                 </View>
-            ))}
-        </ScrollView>
+            </View>
+        </View>
+    );
+
+    const flatData = Object.values(plantData);
+
+    return (
+        <FlatList
+            contentContainerStyle={styles.container}
+            data={flatData}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderItem}
+            onEndReached={() => fetchPlants(page)}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={loading ? <ActivityIndicator size="large" color="#2d4423" /> : null}
+        />
     );
 }
 
@@ -136,13 +158,12 @@ const styles = StyleSheet.create({
         padding: 20,
         alignItems: 'center',
         justifyContent: 'space-between',
-        // ✅ iOS shadow
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 4},
         shadowOpacity: 0.1,
         shadowRadius: 8,
-        // ✅ Android shadow
         elevation: 6,
+        marginBottom: 20,
     },
     textSection: {
         flex: 2,

@@ -1,48 +1,65 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 
-export default function PlantDetails() {
+export default function PlantDetails({navigation, route}) {
+
+    const { plant } = route.params;
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
             {/* Title */}
-            <Text style={styles.title}>Cichorium{'\n'}Intybus</Text>
+            <Text style={styles.title}>{plant.title}</Text>
 
             {/* Main card */}
             <View style={styles.card}>
                 {/* Circle image in top right */}
                 <View style={styles.imageCircle}>
                     <Image
-                        source={require("../assets/test_image.png")}
+                        source={{uri: plant.imageUrl2}}
                         style={styles.blurredImage}
-                        resizeMode="cover"
-                        blurRadius={20} // This adds the blur
+                        resizeMode="contain"
+                        blurRadius={7} // This adds the blur
                     />
                     <Image
-                        source={require("../assets/test_image.png")}
+                        source={{uri: plant.imageUrl2}}
                         style={styles.image}
-                        resizeMode="cover"
+                        resizeMode="contain"
                     />
                 </View>
                 {/* Insects */}
-                <Text style={styles.sectionTitle}>Insecten</Text>
+                <Text style={styles.sectionTitleLarge}>Bestuivers:</Text>
                 <View style={styles.iconRow}>
-                    <View style={[styles.iconCircle, { backgroundColor: '#F3FF33' }]}>
-                        <Text style={styles.iconText}>🐝</Text>
-                    </View>
-                    <View style={[styles.iconCircle, { backgroundColor: '#F23FF3' }]}>
-                        <Text style={styles.iconText}>🦋</Text>
-                    </View>
+                    {plant.pollinators?.some((id) => [1, 2, 3].includes(id)) && (
+                        <View style={[styles.iconCircle, { backgroundColor: '#F3FF33' }]}>
+                            <Text style={styles.iconText}>🐝</Text>
+                        </View>
+                    )}
+                    {plant.pollinators?.some((id) => [7, 8].includes(id)) && (
+                        <View style={[styles.iconCircle, { backgroundColor: '#F23FF3' }]}>
+                            <Text style={styles.iconText}>🦋</Text>
+                        </View>
+                    )}
+                    {plant.pollinators?.some((id) => [4, 5, 6, 11].includes(id)) && (
+                        <View style={[styles.iconCircle, { backgroundColor: '#cf7d51' }]}>
+                            <Text style={styles.iconText}>🪰</Text>
+                        </View>
+                    )}
+                    {plant.pollinators?.some((id) => [9, 10].includes(id)) && (
+                        <View style={[styles.iconCircle, { backgroundColor: '#cdb9ab' }]}>
+                            <Text style={styles.iconText}>🐦‍⬛</Text>
+                        </View>
+                    )}
                 </View>
 
+
                 {/* Sun requirements */}
-                <Text style={styles.sectionTitle}>Zon vereisten</Text>
+                <Text style={styles.sectionTitleLarge}>Zon vereisten</Text>
                 <View style={styles.iconRow}>
                     <View style={[styles.iconCircle, { backgroundColor: '#F3FF33' }]} />
                 </View>
 
                 {/* Soil requirements */}
-                <Text style={styles.sectionTitle}>Grond vereisten</Text>
+                <Text style={styles.sectionTitleLarge}>Grond vereisten</Text>
                 <View style={styles.soilRow}>
                     {['Klei', 'Kalk', 'Leem', 'Zand'].map((type, idx) => (
                         <View key={idx} style={styles.soilItem}>
@@ -53,10 +70,46 @@ export default function PlantDetails() {
                 </View>
 
                 {/* Description */}
-                <Text style={styles.sectionTitle}>Beschrijving</Text>
+                <Text style={styles.sectionTitleLarge}>Informatie</Text>
                 <Text style={styles.description}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    {plant.planttext}
                 </Text>
+
+                {plant.plantpollinatorstext ? (
+                    <>
+                        <Text style={styles.sectionTitle}>Bestuivers</Text>
+                        <Text style={styles.description}>{plant.plantpollinatorstext}</Text>
+                    </>
+                ) : null}
+
+                {plant.plantpropagation ? (
+                    <>
+                        <Text style={styles.sectionTitle}>Voortplanting</Text>
+                        <Text style={styles.description}>{plant.plantpropagation}</Text>
+                    </>
+                ) : null}
+
+                {plant.plantcultivation ? (
+                    <>
+                        <Text style={styles.sectionTitle}>Teelt</Text>
+                        <Text style={styles.description}>{plant.plantcultivation}</Text>
+                    </>
+                ) : null}
+
+                {plant.plantpests ? (
+                    <>
+                        <Text style={styles.sectionTitle}>Ziekten & Plagen</Text>
+                        <Text style={styles.description}>{plant.plantpests}</Text>
+                    </>
+                ) : null}
+
+                {plant.plantmaintenance ? (
+                    <>
+                        <Text style={styles.sectionTitle}>Onderhoud</Text>
+                        <Text style={styles.description}>{plant.plantmaintenance}</Text>
+                    </>
+                ) : null}
+
 
                 {/* Back button */}
                 <TouchableOpacity style={styles.backButton}>
@@ -104,16 +157,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     image: {
-        width: '135%',
-        height: '135%',
+        width: '100%',
+        height: '100%',
         top: '-30',
     },
 
     blurredImage: {
         position: 'absolute',
-        width: '140%',
-        height: '140%',
-        top: '-65',
+        width: '110%',
+        height: '110%',
+        top: '-36',
         opacity: 1,
         zIndex: 0,
     },
@@ -123,6 +176,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginTop: 15,
     },
+
+    sectionTitleLarge: {
+        fontWeight: '700',
+        fontSize: 18,
+        marginTop: 15,
+    },
+
     iconRow: {
         flexDirection: 'row',
         gap: 10,
