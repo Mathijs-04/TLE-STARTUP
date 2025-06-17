@@ -12,6 +12,7 @@ import PlantDetails from "../InfoDetail";
 import EncyclopediaPage from "../EncyclopediaPage";
 import TestScreen from "../EncyclopediaPage";
 import { createStackNavigator } from '@react-navigation/stack';
+import MyGardens from '../MyGardens'; // pas het pad aan indien nodig
 
 const Stack = createStackNavigator();
 
@@ -106,6 +107,12 @@ export default function AppNavigator() {
                     name="PlantDetails"
                     component={PlantDetails}
                     options={{ title: 'Plant Details' }}
+                />
+
+                <Stack.Screen
+                    name="MyGardens"
+                    component={MyGardens}
+                    options={{ title: 'Mijn Tuinen' }}
                 />
             </Stack.Navigator>
         </NavigationContainer>

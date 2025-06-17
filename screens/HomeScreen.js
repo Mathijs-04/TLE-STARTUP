@@ -10,6 +10,7 @@ import {
     Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 // ✅ SVG iconen
 import AddIcon from './iconComponents/CustomPlusIcon';
@@ -58,88 +59,87 @@ const QuickAccessButton = ({ IconComponent, title, onPress }) => (
     </TouchableOpacity>
 );
 
-const Homepage = () => (
-    <SafeAreaView style={styles.container}>
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-            {/* Welkom */}
-            <Text style={styles.welcomeText}>Welkom, User</Text>
+const Homepage = () => {
+    const navigation = useNavigation();
 
-            {/* Jouw tuinen */}
-            <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Jouw tuinen</Text>
-                <TouchableOpacity>
-                    <Text style={styles.moreLink}>Meer..</Text>
-                </TouchableOpacity>
-            </View>
+    return (
+        <SafeAreaView style={styles.container}>
+            <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+                {/* Welkom */}
+                <Text style={styles.welcomeText}>Welkom, User</Text>
 
-            {/* Tuinkaart */}
-            <TouchableOpacity style={styles.gardenCard}>
-                <View style={styles.gardenInfo}>
-                    <Text style={styles.gardenTitle}>Thuis</Text>
-
-                    <Text style={styles.gardenLabel}>Afmetingen:</Text>
-                    <Text style={styles.gardenDetail}>2m x 2.5m 5m²</Text>
-
-
-
-
-                    <Text style={styles.gardenLabel}>Plantendekking:</Text>
-                    <Text style={styles.gardenDetail}>75%</Text>
-                </View>
-                <View style={styles.gardenVisual}>
-                    <GardenGrid />
-                    <Ionicons
-                        name="chevron-forward"
-                        size={24}
-                        color="#9CA3AF"
-                        style={styles.chevron}
-                    />
-                </View>
-            </TouchableOpacity>
-
-            {/* Snel naar... */}
-            <Text style={styles.quickAccessTitle}>Snel naar...</Text>
-            <View style={styles.quickAccessContainer}>
-                <QuickAccessButton
-                    IconComponent={AddIcon}
-                    title="Nieuwe tuin"
-                    onPress={() => {}}
-                />
-                <QuickAccessButton
-                    IconComponent={BookIcon}
-                    title="Encyclopedie"
-                    onPress={() => {}}
-                />
-                <QuickAccessButton
-                    IconComponent={WaterIcon}
-                    title="ECO Tips"
-                    onPress={() => {}}
-                />
-            </View>
-
-            {/* Tip van de dag */}
-            <View style={styles.tipCard}>
-                <View style={styles.tipContent}>
-                    <Text style={styles.tipTitle}>Tuinier tip van de dag!</Text>
-                    <Text style={styles.tipText}>
-                        Wist je dat je regenwater het beste vroeg in de ochtend kunt gebruiken?
-                        Zo verdampt er minder water én krijgen je planten optimaal vocht.
-                    </Text>
-                    <TouchableOpacity>
-                        <Text style={styles.readMoreLink}>Lees meer...</Text>
+                {/* Jouw tuinen */}
+                <View style={styles.sectionHeader}>
+                    <Text style={styles.sectionTitle}>Jouw tuinen</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('MyGardens')}>
+                        <Text style={styles.moreLink}>Meer..</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.tipImage}>
-                    <Image
-                        // source={require('../assets/images/purple_flower_image.png')}
-                        style={styles.flowerImage}
-                        resizeMode="contain"
+
+                {/* Tuinkaart */}
+                <TouchableOpacity style={styles.gardenCard}>
+                    <View style={styles.gardenInfo}>
+                        <Text style={styles.gardenTitle}>Thuis</Text>
+                        <Text style={styles.gardenLabel}>Afmetingen:</Text>
+                        <Text style={styles.gardenDetail}>2m x 2.5m 5m²</Text>
+                        <Text style={styles.gardenLabel}>Plantendekking:</Text>
+                        <Text style={styles.gardenDetail}>75%</Text>
+                    </View>
+                    <View style={styles.gardenVisual}>
+                        <GardenGrid />
+                        <Ionicons
+                            name="chevron-forward"
+                            size={24}
+                            color="#9CA3AF"
+                            style={styles.chevron}
+                        />
+                    </View>
+                </TouchableOpacity>
+
+                {/* Snel naar... */}
+                <Text style={styles.quickAccessTitle}>Snel naar...</Text>
+                <View style={styles.quickAccessContainer}>
+                    <QuickAccessButton
+                        IconComponent={AddIcon}
+                        title="Nieuwe tuin"
+                        onPress={() => {}}
+                    />
+                    <QuickAccessButton
+                        IconComponent={BookIcon}
+                        title="Encyclopedie"
+                        onPress={() => {}}
+                    />
+                    <QuickAccessButton
+                        IconComponent={WaterIcon}
+                        title="ECO Tips"
+                        onPress={() => {}}
                     />
                 </View>
-            </View>
-        </ScrollView>
-    </SafeAreaView>
-);
+
+                {/* Tip van de dag */}
+                <View style={styles.tipCard}>
+                    <View style={styles.tipContent}>
+                        <Text style={styles.tipTitle}>Tuinier tip van de dag!</Text>
+                        <Text style={styles.tipText}>
+                            Wist je dat je regenwater het beste vroeg in de ochtend kunt gebruiken?
+                            Zo verdampt er minder water én krijgen je planten optimaal vocht.
+                        </Text>
+                        <TouchableOpacity>
+                            <Text style={styles.readMoreLink}>Lees meer...</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.tipImage}>
+                        <Image
+                            // source={require('../assets/images/purple_flower_image.png')}
+                            style={styles.flowerImage}
+                            resizeMode="contain"
+                        />
+                    </View>
+                </View>
+            </ScrollView>
+        </SafeAreaView>
+    );
+};
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#F9FAFB' },
@@ -151,7 +151,6 @@ const styles = StyleSheet.create({
         color: '#1F2937',
         marginBottom: 30,
     },
-
     sectionHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -160,7 +159,6 @@ const styles = StyleSheet.create({
     },
     sectionTitle: { fontSize: 18, fontWeight: '600', color: '#1F2937' },
     moreLink: { fontSize: 16, color: '#6B7280', textDecorationLine: 'underline' },
-
     gardenCard: {
         backgroundColor: '#FFF',
         borderRadius: 30,
@@ -195,7 +193,6 @@ const styles = StyleSheet.create({
     },
     gardenVisual: { flexDirection: 'row', alignItems: 'center' },
     chevron: { marginLeft: 10 },
-
     gridContainer: { marginRight: 10 },
     gridRow: { flexDirection: 'row' },
     gridCell: {
@@ -204,7 +201,6 @@ const styles = StyleSheet.create({
         margin: 1,
         borderRadius: 2,
     },
-
     quickAccessTitle: {
         fontSize: 18,
         fontWeight: '600',
@@ -243,7 +239,6 @@ const styles = StyleSheet.create({
         color: '#1F2937',
         textAlign: 'center',
     },
-
     tipCard: {
         backgroundColor: '#FFF',
         borderRadius: 30,
