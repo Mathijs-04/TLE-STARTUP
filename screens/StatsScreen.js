@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 
 export default function StatsScreen() {
-    const [gardenInfo, setGardenInfo] = useState({size: 0, greenPercent: 0});
+    const [gardenInfo, setGardenInfo] = useState({size: 0, greenPercent: 0, co2PerYear: 0});
 
     useFocusEffect(
         useCallback(() => {
@@ -13,7 +13,7 @@ export default function StatsScreen() {
                     const keys = await AsyncStorage.getAllKeys();
                     const gardenKeys = keys.filter(k => k.startsWith('garden_'));
                     if (gardenKeys.length === 0) {
-                        setGardenInfo({size: 0, greenPercent: 0});
+                        setGardenInfo({size: 0, greenPercent: 0, co2PerYear: 0});
                         return;
                     }
 
@@ -25,7 +25,7 @@ export default function StatsScreen() {
 
                     const value = await AsyncStorage.getItem(latestKey);
                     if (!value) {
-                        setGardenInfo({size: 0, greenPercent: 0});a
+                        setGardenInfo({size: 0, greenPercent: 0, co2PerYear: 0});
                         return;
                     }
 
@@ -44,11 +44,12 @@ export default function StatsScreen() {
                     });
 
                     const greenPercent = totalCells === 0 ? 0 : Math.round((greenCount / totalCells) * 100);
+                    const co2PerYear = greenCount * 0.06;
 
-                    setGardenInfo({size: totalCells, greenPercent});
+                    setGardenInfo({size: totalCells, greenPercent, co2PerYear});
                 } catch (e) {
                     console.error('Error loading garden data', e);
-                    setGardenInfo({size: 0, greenPercent: 0});
+                    setGardenInfo({size: 0, greenPercent: 0, co2PerYear: 0});
                 }
             };
 
@@ -60,6 +61,7 @@ export default function StatsScreen() {
         <View style={{padding: 20}}>
             <Text>Formaat: {gardenInfo.size} m²</Text>
             <Text>Percentage groen: {gardenInfo.greenPercent}%</Text>
+            <Text>CO₂ opname: {gardenInfo.co2PerYear.toFixed(2)} kg per jaar</Text>
         </View>
     );
 }
