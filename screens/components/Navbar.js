@@ -12,6 +12,7 @@ import PlantDetails from "../InfoDetail";
 import EncyclopediaPage from "../EncyclopediaPage";
 import TestScreen from "../EncyclopediaPage";
 import { createStackNavigator } from '@react-navigation/stack';
+import EcotipsScreen from "../EcotipsScreen";
 import StatsScreen from "../StatsScreen";
 
 const Stack = createStackNavigator();
@@ -107,6 +108,21 @@ export default function AppNavigator() {
                     name="PlantDetails"
                     component={PlantDetails}
                     options={{ title: 'Plant Details' }}
+                />
+                <Stack.Screen
+                    name="Encyclopedia"
+                    component={TestScreen}
+                    options={{ title: 'Encyclopedia' }}
+                />
+                <Stack.Screen
+                    name="Garden"
+                    component={GardenScreen}
+                    options={{ title: 'Garden' }}
+                />
+                <Stack.Screen
+                    name="EcoTips"
+                    component={EcotipsScreen}
+                    options={{ title: 'EcoTips' }}
                 />
 
                 <Stack.Screen
