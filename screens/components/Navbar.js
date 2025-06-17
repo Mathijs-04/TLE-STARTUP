@@ -9,80 +9,105 @@ import HomeScreen from '../HomeScreen';
 import GardenScreen from '../GardenScreen';
 import InfoScreen from '../InfoScreen';
 import PlantDetails from "../InfoDetail";
+import EncyclopediaPage from "../EncyclopediaPage";
+import TestScreen from "../EncyclopediaPage";
+import { createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
 
-export default function Navbar() {
+function MainTabs() {
+    return (
+        <Tab.Navigator
+            initialRouteName="Home"
+            screenOptions={{
+                headerStyle: styles.headerStyle,
+                tabBarStyle: styles.tabBarStyle,
+                tabBarInactiveTintColor: '#ffffff',
+                tabBarActiveTintColor: '#ffffff',
+                backgroundColor: '#ffffff',
+                tabBarItemStyle: styles.tabBarItemStyle,
+                tabBarShowLabel: false,
+                headerShown: true,
+            }}
+        >
+            <Tab.Screen
+                name="Home"
+                component={HomeScreen}
+                options={{
+                    tabBarIcon: ({ color, size, focused }) => (
+                        <View style={styles.tabIconWrapper}>
+                            {focused ? (
+                                <View style={styles.focusedTab}>
+                                    <HomeIcon width={size} height={size} stroke={color} />
+                                    <Text style={styles.tabItemText}>Home</Text>
+                                </View>
+                            ) : (
+                                <HomeIcon width={size} height={size} stroke={color} />
+                            )}
+                        </View>
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Jouw Tuin"
+                component={GardenScreen}
+                options={{
+                    tabBarIcon: ({ color, size, focused }) => (
+                        <View style={styles.tabIconWrapper}>
+                            {focused ? (
+                                <View style={styles.focusedTab}>
+                                    <PlantIcon width={size} height={size} stroke={color} />
+                                    <Text style={styles.tabItemText}>Garden</Text>
+                                </View>
+                            ) : (
+                                <PlantIcon width={size} height={size} stroke={color} />
+                            )}
+                        </View>
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Encyclopedie"
+                component={TestScreen}
+                options={{
+                    tabBarIcon: ({ color, size, focused }) => (
+                        <View style={styles.tabIconWrapper}>
+                            {focused ? (
+                                <View style={styles.focusedTab}>
+                                    <InfoIcon width={size} height={size} stroke={color} />
+                                    <Text style={styles.tabItemText}>Info</Text>
+                                </View>
+                            ) : (
+                                <InfoIcon width={size} height={size} stroke={color} />
+                            )}
+                        </View>
+                    ),
+                }}
+            />
+        </Tab.Navigator>
+    );
+}
+
+export default function AppNavigator() {
     return (
         <NavigationContainer theme={MyTheme}>
-            <Tab.Navigator
-                initialRouteName="Home"
-                screenOptions={{
-                    headerStyle: styles.headerStyle,
-                    tabBarStyle: styles.tabBarStyle,
-                    tabBarInactiveTintColor: '#ffffff',
-                    tabBarActiveTintColor: '#ffffff',
-                    backgroundColor: '#ffffff',
-                    tabBarItemStyle: styles.tabBarItemStyle,
-                    tabBarShowLabel: false,
-                    headerShown: true,
-                }}
-            >
-                <Tab.Screen
-                    name="Home"
-                    component={HomeScreen}
-                    options={{
-                        tabBarIcon: ({ color, size, focused }) => (
-                            <View style={styles.tabIconWrapper}>
-                                {focused ? (
-                                    <View style={styles.focusedTab}>
-                                        <HomeIcon width={size} height={size} stroke={color} />
-                                        <Text style={styles.tabItemText}>Home</Text>
-                                    </View>
-                                ) : (
-                                    <HomeIcon width={size} height={size} stroke={color} />
-                                )}
-                            </View>
-                        ),
-                    }}
+            <Stack.Navigator>
+                {/* Your main bottom tab navigator */}
+                <Stack.Screen
+                    name="MainTabs"
+                    component={MainTabs}
+                    options={{ headerShown: false }} // hide stack header because tabs have their own
                 />
-                <Tab.Screen
-                    name="Jouw Tuin"
-                    component={GardenScreen}
-                    options={{
-                        tabBarIcon: ({ color, size, focused }) => (
-                            <View style={styles.tabIconWrapper}>
-                                {focused ? (
-                                    <View style={styles.focusedTab}>
-                                        <PlantIcon width={size} height={size} stroke={color} />
-                                        <Text style={styles.tabItemText}>Garden</Text>
-                                    </View>
-                                ) : (
-                                    <PlantIcon width={size} height={size} stroke={color} />
-                                )}
-                            </View>
-                        ),
-                    }}
-                />
-                <Tab.Screen
-                    name="Encyclopedie"
+
+                {/* Your additional screens outside of the tabs */}
+                <Stack.Screen
+                    name="PlantDetails"
                     component={PlantDetails}
-                    options={{
-                        tabBarIcon: ({ color, size, focused }) => (
-                            <View style={styles.tabIconWrapper}>
-                                {focused ? (
-                                    <View style={styles.focusedTab}>
-                                        <InfoIcon width={size} height={size} stroke={color} />
-                                        <Text style={styles.tabItemText}>Info</Text>
-                                    </View>
-                                ) : (
-                                    <InfoIcon width={size} height={size} stroke={color} />
-                                )}
-                            </View>
-                        ),
-                    }}
+                    options={{ title: 'Plant Details' }}
                 />
-            </Tab.Navigator>
+            </Stack.Navigator>
         </NavigationContainer>
     );
 }
