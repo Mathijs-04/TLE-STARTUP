@@ -109,6 +109,12 @@ export default function AppNavigator() {
                     component={PlantDetails}
                     options={{ title: 'Plant Details' }}
                 />
+
+                <Stack.Screen
+                    name="StatsScreen"
+                    component={StatsScreen}
+                    options={{ title: 'Tuinstatistieken' }}
+                />
                 <Stack.Screen
                     name="Encyclopedia"
                     component={TestScreen}
@@ -123,12 +129,6 @@ export default function AppNavigator() {
                     name="EcoTips"
                     component={EcotipsScreen}
                     options={{ title: 'EcoTips' }}
-                />
-
-                <Stack.Screen
-                    name="StatsScreen"
-                    component={StatsScreen}
-                    options={{ title: 'Tuinstatistieken' }}
                 />
             </Stack.Navigator>
         </NavigationContainer>
