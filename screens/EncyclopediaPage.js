@@ -80,8 +80,16 @@ export default function TestScreen({navigation}) {
                 });
             }
 
-            const imageRes = await fetch(`http://${url}:${port}/plants/url/all`);
+            const imageRes = await fetch(`http://${url}:${port}/plants/url/all`,
+                {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                    },
+                });
             const imageData = await imageRes.json();
+            console.log(imageData)
+
 
             for (const plantId in imageData) {
                 if (simplified[plantId]) {
@@ -109,6 +117,7 @@ export default function TestScreen({navigation}) {
     useEffect(() => {
         fetchPlants(INITIAL_PAGE);
     }, []);
+
 
     const renderItem = ({item}) => (
         <View key={item.id} style={styles.card}>
