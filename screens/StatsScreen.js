@@ -11,7 +11,8 @@ export default function StatsScreen({navigation}) {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
 
-    const url = '145.137.58.190';
+    const url = process.env.EXPO_PUBLIC_API_URL;
+    const port = process.env.EXPO_PUBLIC_API_PORT;
     const INITIAL_PAGE = 1;
     const PAGE_LIMIT = 5;
 
@@ -70,7 +71,7 @@ export default function StatsScreen({navigation}) {
         setLoading(true);
         try {
             const plantRes = await fetch(
-                `http://${url}:8001/plants?page=${pageNumber}&limit=${PAGE_LIMIT}`,
+                `http://${url}:${port}/plants?page=${pageNumber}&limit=${PAGE_LIMIT}`,
                 {method: 'GET', headers: {Accept: 'application/json'}}
             );
             const plantJson = await plantRes.json();
@@ -91,7 +92,7 @@ export default function StatsScreen({navigation}) {
                 });
             }
 
-            const imageRes = await fetch(`http://${url}:8001/plants/url/all`);
+            const imageRes = await fetch(`http://${url}:${port}/plants/url/all`);
             const imageData = await imageRes.json();
 
             for (const plantId in imageData) {

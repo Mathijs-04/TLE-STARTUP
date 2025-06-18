@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, SafeAreaView, Linking } from 'react-native';
 
-const API_URL = 'http://145.137.58.190:8001';
+const url = process.env.EXPO_PUBLIC_API_URL + ':' + process.env.EXPO_PUBLIC_API_PORT;
 
 export default function EcotipsScreen() {
     const [ecoTips, setEcoTips] = useState([]);
@@ -127,7 +127,7 @@ export default function EcotipsScreen() {
     const fetchRandomPlantImages = useCallback(async (count = 10) => {
         setLoadingPlants(true);
         try {
-            const res = await fetch(`${API_URL}/plants/url/all`);
+            const res = await fetch(`http://${url}/plants/url/all`);
             const data = await res.json();
 
             const plantArray = Object.values(data)
