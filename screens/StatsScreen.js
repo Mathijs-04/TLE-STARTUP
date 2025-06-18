@@ -82,7 +82,29 @@ export default function StatsScreen({navigation}) {
                 return;
             }
 
-            const keysToKeep = ['title', 'commonname', 'botanicalname', 'planttext', 'slug', 'id'];
+            const keysToKeep = [
+                'title',
+                'botanicalname',
+                'commonname',
+                'othername',
+                'region',
+                'flowercolour',
+                'foliagecolour',
+                'soilph',
+                'lightrequirements',
+                'exposure',
+                'pollinators',
+                'soilrequirements',
+                'planttext',
+                'plantpollinatorstext',
+                'plantpropagation',
+                'plantcultivation',
+                'plantpests',
+                'plantmaintenance',
+                'plantcategory',
+                'slug',
+                'id',
+            ];
             const simplified = {};
             for (const plantId in plants) {
                 const plant = plants[plantId];
@@ -102,7 +124,7 @@ export default function StatsScreen({navigation}) {
 
             for (const plantId in imageData) {
                 if (simplified[plantId]) {
-                    simplified[plantId].imageUrl = `https://greenberrystudio.com/images/${imageData[plantId].url.replace('./public/images/', '')}`;
+                    simplified[plantId].imageUrl2 = `https://greenberrystudio.com/images/${imageData[plantId].url2.replace('./public/images/', '')}`;
                 }
             }
 
@@ -130,7 +152,7 @@ export default function StatsScreen({navigation}) {
                 </TouchableOpacity>
             </View>
             <View style={styles.imageWrapper}>
-                <Image source={{uri: item.imageUrl}} style={styles.image} resizeMode="contain"/>
+                <Image source={{uri: item.imageUrl2}} style={styles.image} resizeMode="contain"/>
             </View>
         </View>
     );
