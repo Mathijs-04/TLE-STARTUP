@@ -127,7 +127,14 @@ export default function EcotipsScreen() {
     const fetchRandomPlantImages = useCallback(async (count = 10) => {
         setLoadingPlants(true);
         try {
-            const res = await fetch(`http://${url}/plants/url/all`);
+
+            const res = await fetch(`http://${url}/plants/url/all`,
+                {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                    },
+                });
             const data = await res.json();
 
             const plantArray = Object.values(data)

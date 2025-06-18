@@ -92,8 +92,13 @@ export default function StatsScreen({navigation}) {
                 });
             }
 
-            const imageRes = await fetch(`http://${url}:${port}/plants/url/all`);
-            const imageData = await imageRes.json();
+            const imageRes = await fetch(`http://${url}:${port}/plants/url/all`,
+                {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                    },
+                });            const imageData = await imageRes.json();
 
             for (const plantId in imageData) {
                 if (simplified[plantId]) {
