@@ -88,7 +88,6 @@ export default function TestScreen({navigation}) {
                     },
                 });
             const imageData = await imageRes.json();
-            console.log(imageData)
 
 
             for (const plantId in imageData) {
