@@ -1,16 +1,20 @@
 // screens/iconComponents/FormScreen.js
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { Checkbox } from 'react-native-paper';
-import { RadioButton } from 'react-native-paper';
+import { Checkbox, RadioButton } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
 // ✅ Import vector icons
 import BeeIcon from './iconComponents/BeeIcon';
 import ButterflyIcon from './iconComponents/ButterflyIcon';
 import BirdIcon from './iconComponents/BirdIcon';
+import RightArrowIcon from './iconComponents/RightArrowIcon';  // pas het pad aan indien nodig
+import LeftArrowIcon from './iconComponents/LeftArrowIcon';  // pas het pad aan indien nodig
 
 const FormScreen = () => {
-    const [lighting, setLighting] = useState({ sun: false, partial: true, shade: false });
+    const navigation = useNavigation();
+
+    const [lighting, setLighting] = useState('partial');
     const [animals, setAnimals] = useState({ bees: true, butterflies: false, birds: false });
 
     const lightingOptions = [
@@ -27,9 +31,6 @@ const FormScreen = () => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <TouchableOpacity style={styles.backButton}></TouchableOpacity>
-            <TouchableOpacity style={styles.profileIcon}></TouchableOpacity>
-
             <Text style={styles.title}>Maak een nieuwe tuin</Text>
 
             <View style={styles.section}>
@@ -53,6 +54,14 @@ const FormScreen = () => {
                     ))}
                 </View>
             </View>
+
+            <TouchableOpacity style={styles.leftNavButton} onPress={() => navigation.navigate('GardenScreen')}>
+                <LeftArrowIcon width={34} height={34} fill="#455736" />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.RightNavButton} onPress={() => navigation.navigate('AdviceScreen')}>
+                <RightArrowIcon width={34} height={34} fill="#455736" />
+            </TouchableOpacity>
 
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Welke dieren wilt u aantrekken?</Text>
@@ -85,6 +94,31 @@ const styles = StyleSheet.create({
     sectionTitle: { fontSize: 18, fontWeight: '600', marginBottom: 15, color: '#000', textAlign: 'center' },
     row: { flexDirection: 'row', justifyContent: 'space-around' },
     centeredItem: { alignItems: 'center' },
+
+    leftNavButton: {
+        position: 'absolute',
+        left: -10,
+        top: '85%',
+        transform: [{ translateY: -340 }],
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 10,
+    },
+    rightNavButton: {
+        position: 'absolute',
+        right: -5,
+        top: '85%',
+        transform: [{ translateY: -340 }],
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 10,
+    },
     circle: {
         width: 60,
         height: 60,
@@ -103,32 +137,8 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 30,
     },
     optionLabel: { marginTop: 8, fontSize: 14, color: '#000' },
-    backButton: {
-        position: 'absolute',
-        top: 20,
-        left: 20,
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: '#2E342A',
-    },
-    profileIcon: {
-        position: 'absolute',
-        top: 20,
-        right: 20,
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: '#FFFF33',
-    },
-    checkbox: {
-        borderRadius: 12, // rond checkbox
-        marginTop: 4,
-    },
-    radioButton: {
-        borderRadius: 12,
-        marginTop: 4,
-    },
+    checkbox: { borderRadius: 12, marginTop: 4 },
+    radioButton: { borderRadius: 12, marginTop: 4 },
 });
 
 export default FormScreen;

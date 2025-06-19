@@ -12,6 +12,7 @@ import {
     Image
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RightArrowIcon from './iconComponents/RightArrowIcon';  // pas het pad aan indien nodig
 // import FormScreen from '/FormScreen'; // Assuming you have a FormScreen component
 
 const MATERIALS = {
@@ -218,8 +219,12 @@ export default function Garden({navigation}) {
                     </ScrollView>
 
 
-                    <TouchableOpacity style={styles.leftNavButton} onPress={() => navigation.navigate('FormScreen')} />
-                    <TouchableOpacity style={styles.rightNavButton} onPress={() => navigation.navigate('FormScreen')} />
+
+
+                    <TouchableOpacity style={styles.rightNavButton} onPress={() => navigation.navigate('FormScreen')}>
+                        <RightArrowIcon width={34} height={34} fill="#455736" />
+                    </TouchableOpacity>
+
 
 
 
@@ -256,7 +261,7 @@ const styles = StyleSheet.create({
     },
     leftNavButton: {
         position: 'absolute',
-        left: -20,
+        left: -5,
         top: '50%',
         transform: [{ translateY: -340 }], // Verplaatst knop naar verticale midden
         width: 40,
@@ -269,13 +274,13 @@ const styles = StyleSheet.create({
     },
     rightNavButton: {
         position: 'absolute',
-        right: -20,
+        right: -5,
         top: '50%',
         transform: [{ translateY: -340 }], // Verplaatst knop naar verticale midden
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: '#2E342A',
+        // backgroundColor: '#2E342A',
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 10

@@ -7,6 +7,7 @@ import PlantIcon from '../iconComponents/PlantIcon';
 import InfoIcon from '../iconComponents/InfoIcon';
 import HomeScreen from '../HomeScreen';
 import GardenScreen from '../GardenScreen';
+import FormScreen from '../FormScreen';
 import InfoScreen from '../InfoScreen';
 import PlantDetails from "../InfoDetail";
 import EncyclopediaPage from "../EncyclopediaPage";
@@ -106,6 +107,17 @@ export default function AppNavigator() {
                     name="PlantDetails"
                     component={PlantDetails}
                     options={{ title: 'Plant Details' }}
+                />
+
+                <Stack.Screen
+                    name="FormScreen"
+                    component={FormScreen}
+                    options={{ title: 'Form' }}
+                />
+                <Stack.Screen
+                    name="GardenScreen"
+                    component={GardenScreen}
+                    options={{ title: 'Garden' }}
                 />
             </Stack.Navigator>
         </NavigationContainer>
