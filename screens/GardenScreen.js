@@ -12,6 +12,7 @@ import {
     Image
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from '@expo/vector-icons';
 
 const MATERIALS = {
     grass: {name: 'Gras', image: require('../assets/materials/grass.webp')},
@@ -122,6 +123,13 @@ export default function Garden({navigation}) {
         Alert.alert('Saved', `Garden ${newSaveNumber} saved.`);
     };
 
+    const handleArrowButtonPress = () => {
+        if (grid.length > 0) {
+            saveGarden();
+        }
+        navigation.navigate('StatsScreen');
+    };
+
     const materialButtonColors = [
         '#87c55f',
         '#c9db74',
@@ -171,11 +179,7 @@ export default function Garden({navigation}) {
                         <Text style={styles.gridButtonText}>Maak tuin</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.statsButtonBackground}>
-                <TouchableOpacity style={styles.statsButton} onPress={() => navigation.navigate('StatsScreen')}>
-                    <Text style={styles.gridButtonText}>Statistieken</Text>
-                </TouchableOpacity>
-                </View>
+
                 <View style={styles.gridContainer}>
                     {grid.length > 0 ? (
                         grid.map((row, rowIndex) => (
@@ -239,8 +243,8 @@ export default function Garden({navigation}) {
                         <TouchableOpacity style={styles.toolButton} onPress={fillAll}>
                             <Text style={styles.toolText}>Vul Alles</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.toolButton} onPress={saveGarden}>
-                            <Text style={styles.toolText}>Opslaan</Text>
+                        <TouchableOpacity style={styles.checkButton} onPress={handleArrowButtonPress}>
+                            <Ionicons name="checkmark" size={24} color="white" />
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -292,19 +296,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: 'center',
         padding: 8,
-        backgroundColor: '#FFFFFF'
-    },
-    statsButton: {
-        backgroundColor: '#455736',
-        paddingHorizontal: 14,
-        paddingVertical: 8,
-        borderRadius: 8,
-        width: 120,
-        alignItems: "center",
-        alignSelf: "center",
-        marginTop: 8,
-    },
-    statsButtonBackground: {
         backgroundColor: '#FFFFFF'
     },
     row: {
@@ -368,6 +359,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#455736',
         padding: 8,
         borderRadius: 8
+    },
+    checkButton: {
+        backgroundColor: '#2CC72E',
+        padding: 8,
+        borderRadius: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 40,
     },
     activeTool: {
         backgroundColor: '#2A3320',
