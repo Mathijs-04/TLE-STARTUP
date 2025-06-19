@@ -232,15 +232,17 @@ export default function Garden({navigation}) {
                         ))}
                     </ScrollView>
 
-
-
-
-                    <TouchableOpacity style={styles.rightNavButton} onPress={() => navigation.navigate('FormScreen')}>
+                    <TouchableOpacity
+                        style={styles.rightNavButton}
+                        onPress={() => {
+                            if (grid.length > 0) {
+                                saveGarden();
+                            }
+                            navigation.navigate('FormScreen');
+                        }}
+                    >
                         <RightArrowIcon width={34} height={34} fill="#455736" />
                     </TouchableOpacity>
-
-
-
 
                     <View style={styles.actionRow}>
                         <TouchableOpacity
