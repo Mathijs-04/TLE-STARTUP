@@ -6,20 +6,40 @@ import {
     FlatList,
     TouchableOpacity,
     Image,
-    ActivityIndicator,
+    ActivityIndicator, TextInput,
 } from 'react-native';
 
 export default function TestScreen({navigation}) {
+    // vars
     const [plantData, setPlantData] = useState({});
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
 
+    // url vars
     const url = process.env.EXPO_PUBLIC_API_URL;
     const port = process.env.EXPO_PUBLIC_API_PORT;
 
+    // pagination vars
     const INITIAL_PAGE = 1;
     const PAGE_LIMIT = 10; // 👈 Easily change how many items load per page
+
+    // search vars
+    const [searchText, setSearchText] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const handleSearch = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch(`http://${url}:${port}/plants`);
+            const data = await response.json();
+            console.log(data.plants);
+            setSearchResults(data);
+        } catch (error) {
+            console.error('Search fetch failed:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const fetchPlants = useCallback(async (pageNumber) => {
         if (loading || !hasMore) return;
@@ -143,6 +163,23 @@ export default function TestScreen({navigation}) {
     const flatData = Object.values(plantData);
 
     return (
+        <View style={{ flex: 1, backgroundColor: '#fff' }}>
+            {/* Search Bar */}
+            <View style={styles.searchContainer}>
+                <Text style={styles.searchIcon}>🔍</Text>
+                <TextInput
+                    placeholder="Zoeken…"
+                    placeholderTextColor="#999"
+                    style={styles.searchInput}
+                    value={searchText}
+                    onChangeText={setSearchText}
+                />
+                <TouchableOpacity>
+                    <Text style={styles.searchButton} onPress={handleSearch}>Zoek</Text>
+                </TouchableOpacity>
+            </View>
+
+            {/* Plant List */}
         <FlatList
             contentContainerStyle={styles.container}
             data={flatData}
@@ -152,6 +189,7 @@ export default function TestScreen({navigation}) {
             onEndReachedThreshold={0.5}
             ListFooterComponent={loading ? <ActivityIndicator size="large" color="#2d4423"/> : null}
         />
+        </View>
     );
 }
 
@@ -219,5 +257,33 @@ const styles = StyleSheet.create({
     image: {
         width: 100,
         height: 130,
+    },
+    searchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        borderRadius: 50,
+        paddingHorizontal: 20,
+        margin: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+        elevation: 5,
+    },
+    searchIcon: {
+        fontSize: 24,
+        marginRight: 10,
+    },
+    searchInput: {
+        flex: 1,
+        fontSize: 18,
+        color: '#333',
+        paddingVertical: 10,
+    },
+    searchButton: {
+        fontSize: 16,
+        color: '#2d4423',
+        fontWeight: '600',
     },
 });
