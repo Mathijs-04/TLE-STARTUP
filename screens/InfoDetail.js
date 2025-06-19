@@ -1,65 +1,151 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import Sun from './iconComponents/SunIcon';
+import HalfSunIcon from "./iconComponents/HalfSunIcon";
+import ShadowIcon from "./iconComponents/ShadowIcon";
 
-export default function PlantDetails() {
+export default function PlantDetails({navigation, route}) {
+
+    const { plant } = route.params;
+
+    const Chalk = require('../assets/soilTypes/chalk.png');
+    const Clay = require('../assets/soilTypes/clay.png');
+    const Loam = require('../assets/soilTypes/loam.png');
+    const Sand = require('../assets/soilTypes/sand.png');
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
             {/* Title */}
-            <Text style={styles.title}>Cichorium{'\n'}Intybus</Text>
+            <Text style={styles.title}>{plant.title}</Text>
 
             {/* Main card */}
             <View style={styles.card}>
                 {/* Circle image in top right */}
                 <View style={styles.imageCircle}>
                     <Image
-                        source={require("../assets/test_image.png")}
+                        source={{uri: plant.imageUrl2}}
                         style={styles.blurredImage}
-                        resizeMode="cover"
-                        blurRadius={20} // This adds the blur
+                        resizeMode="contain"
+                        blurRadius={7} // This adds the blur
                     />
                     <Image
-                        source={require("../assets/test_image.png")}
+                        source={{uri: plant.imageUrl2}}
                         style={styles.image}
-                        resizeMode="cover"
+                        resizeMode="contain"
                     />
                 </View>
                 {/* Insects */}
-                <Text style={styles.sectionTitle}>Insecten</Text>
+                <Text style={styles.sectionTitleLarge}>Bestuivers:</Text>
                 <View style={styles.iconRow}>
-                    <View style={[styles.iconCircle, { backgroundColor: '#F3FF33' }]}>
-                        <Text style={styles.iconText}>🐝</Text>
-                    </View>
-                    <View style={[styles.iconCircle, { backgroundColor: '#F23FF3' }]}>
-                        <Text style={styles.iconText}>🦋</Text>
-                    </View>
+                    {plant.pollinators?.some((id) => [1, 2, 3].includes(id)) && (
+                        <View style={[styles.iconCircle, { backgroundColor: '#F3FF33' }]}>
+                            <Text style={styles.iconText}>🐝</Text>
+                        </View>
+                    )}
+                    {plant.pollinators?.some((id) => [7, 8].includes(id)) && (
+                        <View style={[styles.iconCircle, { backgroundColor: '#F23FF3' }]}>
+                            <Text style={styles.iconText}>🦋</Text>
+                        </View>
+                    )}
+                    {plant.pollinators?.some((id) => [4, 5, 6, 11].includes(id)) && (
+                        <View style={[styles.iconCircle, { backgroundColor: '#cf7d51' }]}>
+                            <Text style={styles.iconText}>🪰</Text>
+                        </View>
+                    )}
+                    {plant.pollinators?.some((id) => [9, 10].includes(id)) && (
+                        <View style={[styles.iconCircle, { backgroundColor: '#cdb9ab' }]}>
+                            <Text style={styles.iconText}>🐦‍⬛</Text>
+                        </View>
+                    )}
                 </View>
 
+
                 {/* Sun requirements */}
-                <Text style={styles.sectionTitle}>Zon vereisten</Text>
+                <Text style={styles.sectionTitleLarge}>Licht Vereisten:</Text>
                 <View style={styles.iconRow}>
-                    <View style={[styles.iconCircle, { backgroundColor: '#F3FF33' }]} />
+                    {plant.lightrequirements.includes(1) && (
+                        <View style={styles.iconWithLabel}>
+                            <Sun />
+                            <Text style={styles.iconLabel}>Zon</Text>
+                        </View>
+                    )}
+                    {plant.lightrequirements.includes(2) && (
+                        <View style={styles.iconWithLabel}>
+                            <HalfSunIcon />
+                            <Text style={styles.iconLabel}>Halfschaduw</Text>
+                        </View>
+                    )}
+                    {plant.lightrequirements.includes(3) && (
+                        <View style={styles.iconWithLabel}>
+                            <ShadowIcon />
+                            <Text style={styles.iconLabel}>Schaduw</Text>
+                        </View>
+                    )}
                 </View>
 
                 {/* Soil requirements */}
-                <Text style={styles.sectionTitle}>Grond vereisten</Text>
+                <Text style={styles.sectionTitleLarge}>Grond vereisten</Text>
                 <View style={styles.soilRow}>
-                    {['Klei', 'Kalk', 'Leem', 'Zand'].map((type, idx) => (
-                        <View key={idx} style={styles.soilItem}>
-                            <View style={styles.soilCircle} />
-                            <Text style={styles.soilText}>{type}</Text>
-                        </View>
+                    {[
+                        { id: 3, label: 'Klei', image: Clay },
+                        { id: 1, label: 'Kalk', image: Chalk },
+                        { id: 2, label: 'Leem', image: Loam },
+                        { id: 4, label: 'Zand', image: Sand },
+                    ].map((soil, idx) => (
+                        plant.soilrequirements.includes(soil.id) && (
+                            <View key={idx} style={styles.soilItem}>
+                                <Image source={soil.image} style={styles.soilCircle} />
+                                <Text style={styles.soilText}>{soil.label}</Text>
+                            </View>
+                        )
                     ))}
                 </View>
 
+
                 {/* Description */}
-                <Text style={styles.sectionTitle}>Beschrijving</Text>
+                <Text style={styles.sectionTitleLarge}>Informatie</Text>
                 <Text style={styles.description}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    {plant.planttext}
                 </Text>
 
+                {plant.plantpollinatorstext ? (
+                    <>
+                        <Text style={styles.sectionTitle}>Bestuivers</Text>
+                        <Text style={styles.description}>{plant.plantpollinatorstext}</Text>
+                    </>
+                ) : null}
+
+                {plant.plantpropagation ? (
+                    <>
+                        <Text style={styles.sectionTitle}>Voortplanting</Text>
+                        <Text style={styles.description}>{plant.plantpropagation}</Text>
+                    </>
+                ) : null}
+
+                {plant.plantcultivation ? (
+                    <>
+                        <Text style={styles.sectionTitle}>Teelt</Text>
+                        <Text style={styles.description}>{plant.plantcultivation}</Text>
+                    </>
+                ) : null}
+
+                {plant.plantpests ? (
+                    <>
+                        <Text style={styles.sectionTitle}>Ziekten & Plagen</Text>
+                        <Text style={styles.description}>{plant.plantpests}</Text>
+                    </>
+                ) : null}
+
+                {plant.plantmaintenance ? (
+                    <>
+                        <Text style={styles.sectionTitle}>Onderhoud</Text>
+                        <Text style={styles.description}>{plant.plantmaintenance}</Text>
+                    </>
+                ) : null}
+
+
                 {/* Back button */}
-                <TouchableOpacity style={styles.backButton}>
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <Text style={styles.backButtonText}>Terug</Text>
                 </TouchableOpacity>
             </View>
@@ -95,8 +181,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 30,
         right: -10,
-        width: 150,
-        height: 150,
+        width: 120,
+        height: 120,
         borderRadius: 100,
         backgroundColor: '#CCD3C5',
         display: 'flex',
@@ -104,16 +190,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     image: {
-        width: '135%',
-        height: '135%',
-        top: '-30',
+        width: '125%',
+        height: '125%',
+        top: '-15',
     },
 
     blurredImage: {
         position: 'absolute',
-        width: '140%',
-        height: '140%',
-        top: '-65',
+        width: '130%',
+        height: '130%',
+        top: '-30',
         opacity: 1,
         zIndex: 0,
     },
@@ -123,6 +209,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginTop: 15,
     },
+
+    sectionTitleLarge: {
+        fontWeight: '700',
+        fontSize: 18,
+        marginTop: 15,
+    },
+
     iconRow: {
         flexDirection: 'row',
         gap: 10,
@@ -148,8 +241,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     soilCircle: {
-        width: 30,
-        height: 30,
+        width: 40,
+        height: 40,
         backgroundColor: '#eee',
         borderRadius: 15,
         marginBottom: 5,
@@ -173,5 +266,14 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: '600',
         fontSize: 16,
+    },
+    iconWithLabel: {
+        alignItems: 'center',
+        marginHorizontal: 10, // spacing between icons
+    },
+    iconLabel: {
+        marginTop: 4,
+        fontSize: 12,
+        color: '#333', // or whatever fits your design
     },
 });

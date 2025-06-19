@@ -165,7 +165,11 @@ export default function Garden({navigation}) {
                         <Text style={styles.gridButtonText}>Maak tuin</Text>
                     </TouchableOpacity>
                 </View>
-
+                <View style={styles.statsButtonBackground}>
+                <TouchableOpacity style={styles.statsButton} onPress={() => navigation.navigate('StatsScreen')}>
+                    <Text style={styles.gridButtonText}>Statistieken</Text>
+                </TouchableOpacity>
+                </View>
                 <View style={styles.gridContainer}>
                     {grid.length > 0 ? (
                         grid.map((row, rowIndex) => (
@@ -282,6 +286,19 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: 'center',
         padding: 8,
+        backgroundColor: '#FFFFFF'
+    },
+    statsButton: {
+        backgroundColor: '#455736',
+        paddingHorizontal: 14,
+        paddingVertical: 8,
+        borderRadius: 8,
+        width: 120,
+        alignItems: "center",
+        alignSelf: "center",
+        marginTop: 8,
+    },
+    statsButtonBackground: {
         backgroundColor: '#FFFFFF'
     },
     row: {
