@@ -18,6 +18,7 @@ import AddIcon from './iconComponents/CustomPlusIcon';
 import BookIcon from './iconComponents/OpenBookIcon';
 import WaterIcon from './iconComponents/WaterdropIcon';
 
+
 const GardenGrid = () => {
     const gridData = [
         ['gray', 'yellow', 'yellow', 'yellow'],
@@ -98,6 +99,12 @@ const Homepage = ({ navigation }) => {
 
                 <View style={styles.sectionHeader}>
                     <Text style={styles.sectionTitle}>Jouw tuin:</Text>
+
+
+                    <TouchableOpacity onPress={() => navigation.navigate('MyGardens')}>
+                        <Text style={styles.moreLink}>Alle tuinen...</Text>
+                    </TouchableOpacity>
+
                 </View>
 
                 <View style={styles.gardenCard}>
@@ -158,7 +165,7 @@ const styles = StyleSheet.create({
         flexDirection:'row', justifyContent:'space-between', alignItems:'center', marginBottom:15
     },
     sectionTitle:{ fontSize:18, fontWeight:'600', color:'#1F2937' },
-    moreLink:{ fontSize:16, color:'#6B7280', textDecorationLine:'underline' },
+    moreLink:{ fontSize:16, color:'#6B7280', paddingRight: 8, textDecorationLine:'underline' },
 
     gardenCard: {
         backgroundColor:'#FFF', borderRadius:30, padding:20, marginBottom:30,
@@ -193,13 +200,14 @@ const styles = StyleSheet.create({
     tipContent:{ flex:1,paddingRight:15 },
     tipTitle:{ fontSize:18,fontWeight:'bold',color:'#1F2937',marginBottom:10 },
     tipText:{ fontSize:14,color:'#6B7280',lineHeight:20,marginBottom:10 },
-    readMoreLink:{ fontSize:14,color:'#6B7280',textDecorationLine:'underline' },
+    readMoreLink:{ fontSize:14,color:'#6B7280', paddingRight: 5, textDecorationLine:'underline' },
     tipImage: {
         width: 140,            // increased from 120
         height: 140,           // increased from 120
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 50,         // moves image down a bit
+        marginTop: 50,
+        // moves image down a bit
     },
     flowerImage: {
         width: 140,            // match new size

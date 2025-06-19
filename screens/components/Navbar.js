@@ -1,23 +1,24 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+
 import HomeIcon from '../iconComponents/HomeIcon';
 import PlantIcon from '../iconComponents/PlantIcon';
 import InfoIcon from '../iconComponents/InfoIcon';
+
 import HomeScreen from '../HomeScreen';
 import GardenScreen from '../GardenScreen';
 import InfoScreen from '../InfoScreen';
-import PlantDetails from "../InfoDetail";
-import EncyclopediaPage from "../EncyclopediaPage";
-import TestScreen from "../EncyclopediaPage";
-import { createStackNavigator } from '@react-navigation/stack';
-import MyGardens from '../MyGardens'; // pas het pad aan indien nodig
-import EcotipsScreen from "../EcotipsScreen";
-import StatsScreen from "../StatsScreen";
+import PlantDetails from '../InfoDetail';
+import EncyclopediaPage from '../EncyclopediaPage';
+import TestScreen from '../EncyclopediaPage'; // lijkt een alias te zijn voor EncyclopediaPage
+import MyGardens from '../MyGardens'; // dit is toegevoegd
+import EcotipsScreen from '../EcotipsScreen';
+import StatsScreen from '../StatsScreen';
 
 const Stack = createStackNavigator();
-
 const Tab = createBottomTabNavigator();
 
 function MainTabs() {
@@ -97,20 +98,16 @@ export default function AppNavigator() {
     return (
         <NavigationContainer theme={MyTheme}>
             <Stack.Navigator>
-                {/* Your main bottom tab navigator */}
                 <Stack.Screen
                     name="MainTabs"
                     component={MainTabs}
-                    options={{ headerShown: false }} // hide stack header because tabs have their own
+                    options={{ headerShown: false }}
                 />
-
-                {/* Your additional screens outside of the tabs */}
                 <Stack.Screen
                     name="PlantDetails"
                     component={PlantDetails}
                     options={{ title: 'Plant Details' }}
                 />
-
                 <Stack.Screen
                     name="StatsScreen"
                     component={StatsScreen}
@@ -131,6 +128,11 @@ export default function AppNavigator() {
                     component={EcotipsScreen}
                     options={{ title: 'EcoTips' }}
                 />
+                <Stack.Screen
+                    name="MyGardens"
+                    component={MyGardens}
+                    options={{ title: 'Mijn Tuinen' }}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     );
@@ -140,7 +142,7 @@ const MyTheme = {
     ...DefaultTheme,
     colors: {
         ...DefaultTheme.colors,
-        background: '#FFFFFF', // Set background to white
+        background: '#FFFFFF',
     },
 };
 
