@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
+import RightArrowIcon from './iconComponents/RightArrowIcon';  // pas het pad aan indien nodig
+// import FormScreen from '/FormScreen'; // Assuming you have a FormScreen component
 
 const MATERIALS = {
     grass: {name: 'Gras', image: require('../assets/materials/grass.webp')},
@@ -230,6 +232,16 @@ export default function Garden({navigation}) {
                         ))}
                     </ScrollView>
 
+
+
+
+                    <TouchableOpacity style={styles.rightNavButton} onPress={() => navigation.navigate('FormScreen')}>
+                        <RightArrowIcon width={34} height={34} fill="#455736" />
+                    </TouchableOpacity>
+
+
+
+
                     <View style={styles.actionRow}>
                         <TouchableOpacity
                             style={[styles.toolButton, mode === 'eraser' && styles.activeTool]}
@@ -253,10 +265,39 @@ export default function Garden({navigation}) {
     );
 }
 
+
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#849970',
+    },
+    leftNavButton: {
+        position: 'absolute',
+        left: -5,
+        top: '50%',
+        transform: [{ translateY: -340 }], // Verplaatst knop naar verticale midden
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: '#2E342A',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 10
+    },
+    rightNavButton: {
+        position: 'absolute',
+        right: -5,
+        top: '50%',
+        transform: [{ translateY: -340 }], // Verplaatst knop naar verticale midden
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        // backgroundColor: '#2E342A',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 10
     },
     settingsRow: {
         flexDirection: 'row',
@@ -296,6 +337,19 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: 'center',
         padding: 8,
+        backgroundColor: '#FFFFFF'
+    },
+    statsButton: {
+        backgroundColor: '#455736',
+        paddingHorizontal: 14,
+        paddingVertical: 8,
+        borderRadius: 8,
+        width: 120,
+        alignItems: "center",
+        alignSelf: "center",
+        marginTop: 8,
+    },
+    statsButtonBackground: {
         backgroundColor: '#FFFFFF'
     },
     row: {
