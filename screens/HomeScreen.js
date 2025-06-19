@@ -78,7 +78,7 @@ const Homepage = ({ navigation }) => {
                     }
                     const g = JSON.parse(value);
                     const total = g.rows * g.cols;
-                    const green = g.data.filter(i=> ['G','H','F','B'].includes(i.split('.')[2])).length;
+                    const green = g.data.filter(i=> ['G','H','F','B', 'R', 'A'].includes(i.split('.')[2])).length;
                     const percent = total===0?0:Math.round((green/total)*100);
                     const co2 = green * 0.06;
                     setGardenInfo({ size: total, greenPercent: percent, co2PerYear: co2 });

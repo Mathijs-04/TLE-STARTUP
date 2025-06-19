@@ -17,6 +17,8 @@ const MATERIALS = {
     grass: {name: 'Gras', image: require('../assets/materials/grass.webp')},
     hedge: {name: 'Heg', image: require('../assets/materials/hedge.webp')},
     bush: {name: 'Bosje', image: require('../assets/materials/bush.webp')},
+    tree: {name: 'Boom', image: require('../assets/materials/tree.webp')},
+    garden: {name: 'Moestuin', image: require('../assets/materials/garden.webp')},
     flowers: {name: 'Bloemen', image: require('../assets/materials/flower.webp')},
     tiles: {name: 'Tegels', image: require('../assets/materials/tile.webp')},
     dirt: {name: 'Aarde', image: require('../assets/materials/dirt.webp')},
@@ -29,6 +31,8 @@ const MATERIAL_CODES = {
     grass: 'G',
     hedge: 'H',
     bush: 'B',
+    tree: 'R',
+    garden: 'A',
     flowers: 'F',
     tiles: 'T',
     dirt: 'D',
@@ -122,12 +126,14 @@ export default function Garden({navigation}) {
         '#87c55f',
         '#c9db74',
         '#8be0a4',
+        '#99bc85',
+        '#a7c1a8',
         '#fe88b1',
         '#b3b3b3',
         '#836953',
         '#f6cf71',
         '#66c5cc',
-        '#ff6961'
+        '#737373'
     ];
 
     return (

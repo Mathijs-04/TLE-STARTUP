@@ -47,7 +47,7 @@ export default function StatsScreen({navigation}) {
                     data.forEach(item => {
                         const parts = item.split('.');
                         const code = parts[2];
-                        if (['G', 'H', 'F', 'B'].includes(code)) {
+                        if (['G', 'H', 'F', 'B', 'R', 'A'].includes(code)) {
                             greenCount++;
                         }
                     });
