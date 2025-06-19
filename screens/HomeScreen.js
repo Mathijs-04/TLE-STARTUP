@@ -100,7 +100,7 @@ const Homepage = ({ navigation }) => {
                     <Text style={styles.sectionTitle}>Jouw tuin:</Text>
                 </View>
 
-                <View style={styles.gardenCard}>
+                <TouchableOpacity style={styles.gardenCard} onPress={() => navigation.navigate('StatsScreen')}>
                     <View style={styles.gardenInfo}>
                         <Text style={styles.gardenTitle}>Tuin statistieken</Text>
                         <Text style={styles.gardenLabel}>Oppervlakte:</Text>
@@ -114,7 +114,7 @@ const Homepage = ({ navigation }) => {
                         <GardenGrid />
                         {/*<Ionicons name="chevron-forward" size={24} color="#9CA3AF" style={styles.chevron} />*/}
                     </View>
-                </View>
+                </TouchableOpacity>
 
                 <Text style={styles.quickAccessTitle}>Snel naar:</Text>
                 <View style={styles.quickAccessContainer}>
