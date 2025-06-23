@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -9,12 +9,12 @@ import {
     Alert,
     KeyboardAvoidingView,
     Platform,
-    Image
+    Image,
+    Animated,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
-import RightArrowIcon from './iconComponents/RightArrowIcon';  // pas het pad aan indien nodig
-// import FormScreen from '/FormScreen'; // Assuming you have a FormScreen component
+import RightArrowIcon from './iconComponents/RightArrowIcon';
 
 const MATERIALS = {
     grass: {name: 'Gras', image: require('../assets/materials/grass.webp')},
@@ -51,11 +51,12 @@ const CODE_TO_MATERIAL = Object.fromEntries(
 
 export default function Garden({navigation}) {
     const [grid, setGrid] = useState([]);
-    const [rows, setRows] = useState(10);
-    const [cols, setCols] = useState(10);
+    const [rows, setRows] = useState('10');
+    const [cols, setCols] = useState('10');
     const [selectedMaterial, setSelectedMaterial] = useState('grass');
     const [mode, setMode] = useState('brush');
     const [saveCount, setSaveCount] = useState(0);
+    const scrollX = useState(new Animated.Value(0))[0];
 
     useEffect(() => {
         (async () => {
@@ -66,10 +67,12 @@ export default function Garden({navigation}) {
     }, []);
 
     const initializeGrid = () => {
+        const numRows = parseInt(rows) || 10;
+        const numCols = parseInt(cols) || 10;
         const newGrid = [];
-        for (let i = 0; i < rows; i++) {
+        for (let i = 0; i < numRows; i++) {
             const row = [];
-            for (let j = 0; j < cols; j++) {
+            for (let j = 0; j < numCols; j++) {
                 row.push({material: 'empty', key: `${i}-${j}`});
             }
             newGrid.push(row);
@@ -115,8 +118,8 @@ export default function Garden({navigation}) {
             });
         });
         const exportObject = {
-            rows,
-            cols,
+            rows: parseInt(rows) || 10,
+            cols: parseInt(cols) || 10,
             data: exportArray
         };
         const newSaveNumber = saveCount + 1;
@@ -146,6 +149,12 @@ export default function Garden({navigation}) {
         '#737373'
     ];
 
+    const indicatorTranslateX = scrollX.interpolate({
+        inputRange: [0, 60 * Object.keys(MATERIALS).length],
+        outputRange: [0, 100],
+        extrapolate: 'clamp',
+    });
+
     return (
         <View style={{flex: 1, backgroundColor: '#849970', paddingBottom: 80}}>
             <KeyboardAvoidingView
@@ -157,11 +166,12 @@ export default function Garden({navigation}) {
                     <TextInput
                         style={styles.input}
                         keyboardType="numeric"
-                        placeholder="Rows"
-                        value={rows.toString()}
-                        onChangeText={(text) => {
-                            const value = Math.max(1, Math.min(13, parseInt(text) || 0));
-                            setRows(value);
+                        placeholder="L"
+                        value={rows}
+                        onChangeText={(text) => setRows(text)}
+                        onEndEditing={() => {
+                            const num = Math.max(1, Math.min(13, parseInt(rows) || 1));
+                            setRows(num.toString());
                         }}
                     />
                     <Text style={styles.barText}>m </Text>
@@ -169,11 +179,12 @@ export default function Garden({navigation}) {
                     <TextInput
                         style={styles.input}
                         keyboardType="numeric"
-                        placeholder="Cols"
-                        value={cols.toString()}
-                        onChangeText={(text) => {
-                            const value = Math.max(1, Math.min(15, parseInt(text) || 0));
-                            setCols(value);
+                        placeholder="B"
+                        value={cols}
+                        onChangeText={(text) => setCols(text)}
+                        onEndEditing={() => {
+                            const num = Math.max(1, Math.min(15, parseInt(cols) || 1));
+                            setCols(num.toString());
                         }}
                     />
                     <Text style={styles.barText}>m </Text>
@@ -211,14 +222,22 @@ export default function Garden({navigation}) {
                 </View>
 
                 <View style={styles.toolbarContainer}>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false}
-                                contentContainerStyle={styles.materialRow}>
+                    <Animated.ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={styles.materialRow}
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                            { useNativeDriver: false }
+                        )}
+                        scrollEventThrottle={16}
+                    >
                         {Object.entries(MATERIALS).map(([key, material], index) => (
                             <TouchableOpacity
                                 key={key}
                                 style={[
                                     styles.materialButton,
-                                    {backgroundColor: materialButtonColors[index]},
+                                    { backgroundColor: materialButtonColors[index] },
                                     selectedMaterial === key && styles.selectedMaterial
                                 ]}
                                 onPress={() => {
@@ -226,11 +245,17 @@ export default function Garden({navigation}) {
                                     setMode('brush');
                                 }}
                             >
-                                <Image source={material.image} style={styles.toolbarImage} resizeMode="cover"/>
+                                <Image source={material.image} style={styles.toolbarImage} resizeMode="cover" />
                                 <Text style={styles.materialText}>{material.name}</Text>
                             </TouchableOpacity>
                         ))}
-                    </ScrollView>
+                    </Animated.ScrollView>
+
+                    <View style={styles.scrollIndicatorContainer}>
+                        <Animated.View
+                            style={[styles.scrollIndicator, { transform: [{ translateX: indicatorTranslateX }] }]}
+                        />
+                    </View>
 
                     <TouchableOpacity
                         style={styles.rightNavButton}
@@ -267,39 +292,10 @@ export default function Garden({navigation}) {
     );
 }
 
-
-
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#849970',
-    },
-    leftNavButton: {
-        position: 'absolute',
-        left: -5,
-        top: '50%',
-        transform: [{ translateY: -340 }], // Verplaatst knop naar verticale midden
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: '#2E342A',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 10
-    },
-    rightNavButton: {
-        position: 'absolute',
-        right: -5,
-        top: '50%',
-        transform: [{ translateY: -340 }], // Verplaatst knop naar verticale midden
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        // backgroundColor: '#2E342A',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 10
     },
     settingsRow: {
         flexDirection: 'row',
@@ -339,19 +335,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: 'center',
         padding: 8,
-        backgroundColor: '#FFFFFF'
-    },
-    statsButton: {
-        backgroundColor: '#455736',
-        paddingHorizontal: 14,
-        paddingVertical: 8,
-        borderRadius: 8,
-        width: 120,
-        alignItems: "center",
-        alignSelf: "center",
-        marginTop: 8,
-    },
-    statsButtonBackground: {
         backgroundColor: '#FFFFFF'
     },
     row: {
@@ -405,6 +388,33 @@ const styles = StyleSheet.create({
         fontSize: 10,
         textAlign: 'center',
         color: 'white'
+    },
+    scrollIndicatorContainer: {
+        height: 4,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        marginTop: 4,
+        paddingHorizontal: 8
+    },
+    scrollIndicator: {
+        width: 325,
+        height: 4,
+        borderRadius: 2,
+        backgroundColor: '#FFFFFF',
+        opacity: 0.7
+    },
+    rightNavButton: {
+        position: 'absolute',
+        right: -5,
+        top: '50%',
+        transform: [{ translateY: -340 }],
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 10
     },
     actionRow: {
         flexDirection: 'row',
