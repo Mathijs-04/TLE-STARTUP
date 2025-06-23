@@ -113,14 +113,6 @@ const FormScreen = () => {
                 </View>
             </View>
 
-            <TouchableOpacity style={styles.leftNavButton} onPress={() => navigation.navigate('GardenScreen')}>
-                <LeftArrowIcon width={34} height={34} fill="#455736" />
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.rightNavButton} onPress={() => navigation.navigate('StatsScreen')}>
-                <RightArrowIcon width={34} height={34} fill="#455736" />
-            </TouchableOpacity>
-
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Welke bestuivers wilt u aantrekken?</Text>
                 <View style={styles.row}>
@@ -165,19 +157,31 @@ const FormScreen = () => {
                     ))}
                 </View>
             </View>
+            <TouchableOpacity
+                style={styles.nextButton}
+                onPress={() => navigation.navigate('GardenScreen')}
+                activeOpacity={0.8}
+            >
+                <Text style={styles.nextButtonText}>Verder</Text>
+            </TouchableOpacity>
         </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flexGrow: 1, padding: 20, backgroundColor: '#fff', alignItems: 'center' },
-    title: { fontSize: 28, fontWeight: 'bold', marginBottom: 20, color: '#000', textAlign: 'center' },
+    container: {
+        flexGrow: 1,
+        padding: 20,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        marginBottom: 50,
+        paddingBottom: 100,
+    },
+    title: { fontSize: 28, fontWeight: 'bold', marginBottom: 10, color: '#000', textAlign: 'center' },
     section: { marginBottom: 30, width: '100%' },
-    sectionTitle: { fontSize: 18, fontWeight: '600', marginBottom: 15, color: '#000', textAlign: 'center' },
+    sectionTitle: { fontSize: 18, fontWeight: '600', marginBottom: 10, color: '#000', textAlign: 'center' },
     row: { flexDirection: 'row', justifyContent: 'space-around' },
     centeredItem: { alignItems: 'center' },
-    leftNavButton: { position: 'absolute', left: -5, top: '85%', transform: [{ translateY: -340 }], width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', zIndex: 10 },
-    rightNavButton: { position: 'absolute', right: -5, top: '85%', transform: [{ translateY: -340 }], width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', zIndex: 10 },
     circle: { width: 60, height: 60, borderRadius: 30, justifyContent: 'center', alignItems: 'center', position: 'relative' },
     overlayHalf: { position: 'absolute', right: 0, width: '50%', height: '100%', backgroundColor: '#555', borderTopRightRadius: 30, borderBottomRightRadius: 30 },
     optionLabel: { marginTop: 8, fontSize: 14, color: '#000' },
@@ -199,7 +203,29 @@ const styles = StyleSheet.create({
         shadowRadius: 1.5,           // shadow blur
         elevation: 3,                // for Android shadow
         backgroundColor: '#fff',     // keep background white so shadow is visible
-    }
+    },
+    nextButton: {
+        backgroundColor: '#455736',
+        paddingVertical: 15,
+        paddingHorizontal: 30,
+        borderRadius: 30,
+        marginTop: 0,
+        alignSelf: 'center',
+        width: '90%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    nextButtonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: '600',
+    },
+
 });
 
 export default FormScreen;

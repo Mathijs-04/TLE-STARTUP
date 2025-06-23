@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import AddIcon from './iconComponents/CustomPlusIcon';
 import BookIcon from './iconComponents/OpenBookIcon';
 import WaterIcon from './iconComponents/WaterdropIcon';
+import Garden from "./GardenScreen";
 
 const GardenGrid = () => {
     const gridData = [
@@ -117,10 +118,28 @@ const Homepage = ({ navigation }) => {
 
                 <Text style={styles.quickAccessTitle}>Snel naar:</Text>
                 <View style={styles.quickAccessContainer}>
-                    <QuickAccessButton IconComponent={AddIcon} title="Nieuwe tuin" onPress={()=>navigation.navigate('Garden')}/>
-                    <QuickAccessButton IconComponent={BookIcon} title="Encyclopedie" onPress={()=>navigation.navigate('Encyclopedia')}/>
-                    <QuickAccessButton IconComponent={WaterIcon} title="ECO Tips" onPress={()=>navigation.navigate('EcoTips')}/>
+                    {/* Navigate to Garden main screen */}
+                    <QuickAccessButton
+                        IconComponent={AddIcon}
+                        title="Nieuwe tuin"
+                        onPress={() => navigation.navigate('Garden', { screen: 'Instellingen' })}
+                    />
+
+                    {/* Navigate to Encyclopedia main screen */}
+                    <QuickAccessButton
+                        IconComponent={BookIcon}
+                        title="Encyclopedie"
+                        onPress={() => navigation.navigate('Encyclopedia', { screen: 'EncyclopediaMain' })}
+                    />
+
+                    {/* Navigate to EcoTips screen inside HomeStack */}
+                    <QuickAccessButton
+                        IconComponent={WaterIcon}
+                        title="ECO Tips"
+                        onPress={() => navigation.navigate('Home', { screen: 'EcoTips' })}
+                    />
                 </View>
+
 
                 <Text style={styles.quickAccessTitle}>Tip:</Text>
                 <View style={styles.tipCard}>

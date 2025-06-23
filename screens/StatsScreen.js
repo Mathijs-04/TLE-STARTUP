@@ -1,10 +1,11 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {View, Text, StyleSheet, FlatList, Image, ActivityIndicator, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useFocusEffect} from '@react-navigation/native';
+import {CommonActions, useFocusEffect} from '@react-navigation/native';
 import {FontAwesome5, MaterialIcons, Entypo} from '@expo/vector-icons';
 
 export default function StatsScreen({navigation}) {
+
     const [gardenInfo, setGardenInfo] = useState({size: 0, greenPercent: 0, co2PerYear: 0});
     const [plantData, setPlantData] = useState({});
     const [loading, setLoading] = useState(true); // loading indicator for initial fetch
@@ -258,7 +259,14 @@ export default function StatsScreen({navigation}) {
                 <Text style={styles.title}>{item.commonname}</Text>
                 <Text style={styles.botanicalName}>{item.botanicalname}</Text>
                 <Text numberOfLines={3} style={styles.plantText}>{item.planttext}</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('PlantDetails', {plant: item})}>
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate('Encyclopedia', {
+                            screen: 'PlantDetails',
+                            params: { plant: item }
+                        });
+                    }}
+                >
                     <Text style={styles.readMore}>Lees meer…</Text>
                 </TouchableOpacity>
             </View>
