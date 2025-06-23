@@ -205,26 +205,28 @@ export default function TestScreen({navigation}) {
 
     return (
         <View style={{ flex: 1, backgroundColor: '#fff' }}>
-            {/* Search Bar */}
-            <View style={styles.searchContainer}>
-                <Text style={styles.searchIcon}>🔍</Text>
-                <TextInput
-                    placeholder="Zoeken…"
-                    placeholderTextColor="#999"
-                    style={styles.searchInput}
-                    value={searchText}
-                    onChangeText={setSearchText}
-                />
-                <TouchableOpacity>
-                    <Text style={styles.searchButton} onPress={handleSearch}>Zoek</Text>
-                </TouchableOpacity>
+            <View style={styles.searchWrapper}>
+                <View style={styles.searchContainer}>
+                    <Text style={styles.searchIcon}>🔍</Text>
+                    <TextInput
+                        placeholder="Zoeken…"
+                        placeholderTextColor="#999"
+                        style={styles.searchInput}
+                        value={searchText}
+                        onChangeText={setSearchText}
+                    />
+                    <TouchableOpacity style={styles.searchButtonContainer} onPress={handleSearch}>
+                        <Text style={styles.searchButtonText}>Zoek</Text>
+                    </TouchableOpacity>
+                </View>
+
                 {searchActive && (
-                    <TouchableOpacity onPress={() => {
+                    <TouchableOpacity style={styles.clearSearchButtonContainer} onPress={() => {
                         setSearchText('');
                         setSearchResults([]);
                         setSearchActive(false);
                     }}>
-                        <Text style={styles.removeSearchButton}>Wis zoeken</Text>
+                        <Text style={styles.clearSearchButtonText}>Wis zoeken</Text>
                     </TouchableOpacity>
                 )}
             </View>
@@ -239,10 +241,11 @@ export default function TestScreen({navigation}) {
                     if (!searchActive) fetchPlants(page);
                 }}
                 onEndReachedThreshold={0.5}
-                ListFooterComponent={loading ? <ActivityIndicator size="large" color="#2d4423"/> : null}
+                ListFooterComponent={loading ? <ActivityIndicator size="large" color="#2d4423" /> : null}
             />
         </View>
     );
+
 }
 
 const styles = StyleSheet.create({
@@ -333,14 +336,30 @@ const styles = StyleSheet.create({
         color: '#333',
         paddingVertical: 10,
     },
-    searchButton: {
+    searchButtonContainer: {
+        backgroundColor: '#2d4423',
+        paddingVertical: 6,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        marginLeft: 8,
+    },
+    searchButtonText: {
+        color: '#fff',
         fontSize: 16,
-        color: '#2d4423',
         fontWeight: '600',
     },
-    removeSearchButton: {
+
+    clearSearchButtonContainer: {
+        backgroundColor: '#ff4d4d',
+        paddingVertical: 6,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        alignSelf: 'center',
+        marginTop: 10,
+    },
+    clearSearchButtonText: {
+        color: '#fff',
         fontSize: 16,
-        color: '#2d4423',
         fontWeight: '600',
     },
 });
