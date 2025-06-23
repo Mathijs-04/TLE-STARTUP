@@ -56,6 +56,7 @@ export default function Garden({navigation}) {
     const [selectedMaterial, setSelectedMaterial] = useState('grass');
     const [mode, setMode] = useState('brush');
     const [saveCount, setSaveCount] = useState(0);
+    const [hasInitialized, setHasInitialized] = useState(false);
     const scrollX = useState(new Animated.Value(0))[0];
 
     useEffect(() => {
@@ -78,6 +79,7 @@ export default function Garden({navigation}) {
             newGrid.push(row);
         }
         setGrid(newGrid);
+        setHasInitialized(true);
     };
 
     const handleCellTap = (rowIndex, colIndex) => {
@@ -188,7 +190,14 @@ export default function Garden({navigation}) {
                         }}
                     />
                     <Text style={styles.barText}>m </Text>
-                    <TouchableOpacity style={styles.gridButton} onPress={initializeGrid}>
+                    <TouchableOpacity
+                        style={[
+                            styles.gridButton,
+                            { backgroundColor: !hasInitialized ? '#2CC72E' : '#455736' }
+                        ]}
+                        onPress={initializeGrid}
+                        // disabled={hasInitialized}
+                    >
                         <Text style={styles.gridButtonText}>Maak tuin</Text>
                     </TouchableOpacity>
                 </View>
@@ -270,7 +279,14 @@ export default function Garden({navigation}) {
                         <TouchableOpacity style={styles.toolButton} onPress={fillAll}>
                             <Text style={styles.toolText}>Vul Alles</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.checkButton} onPress={handleArrowButtonPress}>
+                        <TouchableOpacity
+                            style={[
+                                styles.checkButton,
+                                { backgroundColor: hasInitialized ? '#2CC72E' : '#888' }
+                            ]}
+                            onPress={handleArrowButtonPress}
+                            disabled={!hasInitialized}
+                        >
                             <Ionicons name="checkmark" size={24} color="white" />
                         </TouchableOpacity>
                     </View>
@@ -310,7 +326,6 @@ const styles = StyleSheet.create({
         color: 'white'
     },
     gridButton: {
-        backgroundColor: '#455736',
         paddingHorizontal: 14,
         paddingVertical: 8,
         borderRadius: 8
@@ -415,7 +430,6 @@ const styles = StyleSheet.create({
         borderRadius: 8
     },
     checkButton: {
-        backgroundColor: '#2CC72E',
         padding: 8,
         borderRadius: 8,
         justifyContent: 'center',
