@@ -335,7 +335,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 4,
-        height: '60%',
+        height: '55%',
     },
 
     header: {
