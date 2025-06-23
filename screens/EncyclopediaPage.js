@@ -27,13 +27,54 @@ export default function TestScreen({navigation}) {
     // search vars
     const [searchText, setSearchText] = useState('');
     const [searchResults, setSearchResults] = useState([]);
+    const [searchActive, setSearchActive] = useState(false);
+
     const handleSearch = async () => {
+        if (!searchText.trim()) return;
+
         try {
             setLoading(true);
+            setSearchActive(true); // 🔍 Activate search mode
             const response = await fetch(`http://${url}:${port}/plants`);
             const data = await response.json();
-            console.log(data.plants);
-            setSearchResults(data);
+
+            const results = [];
+            const query = searchText.toLowerCase();
+
+            for (const key in data.plants) {
+                const plant = data.plants[key];
+                const { id, title, botanicalname, commonname, othername } = plant;
+
+                if (
+                    title?.toLowerCase().includes(query) ||
+                    botanicalname?.toLowerCase().includes(query) ||
+                    commonname?.toLowerCase().includes(query) ||
+                    othername?.toLowerCase().includes(query)
+                ) {
+                    results.push(id);
+                }
+            }
+
+            // Fetch detailed info for each matched plant
+            const matchedPlants = {};
+            for (const id of results) {
+                const res = await fetch(`http://${url}:${port}/plants/${id}`);
+                const detailed = await res.json();
+                matchedPlants[id] = detailed;
+
+                // Optional: fetch image data like you do elsewhere
+                const imgRes = await fetch(`http://${url}:${port}/plants/img/${id}`);
+                const imgData = await imgRes.json();
+                if (imgData?.url) {
+                    matchedPlants[id].imageUrl = `https://greenberrystudio.com/images/${imgData.url.replace('./public/images/', '')}`;
+                    matchedPlants[id].imageUrl2 = `https://greenberrystudio.com/images/${imgData.url2.replace('./public/images/', '')}`;
+                    if (imgData.url3) {
+                        matchedPlants[id].imageUrl3 = `https://greenberrystudio.com/images/${imgData.url3.replace('./public/images/', '')}`;
+                    }
+                }
+            }
+
+            setSearchResults(Object.values(matchedPlants));
         } catch (error) {
             console.error('Search fetch failed:', error);
         } finally {
@@ -177,18 +218,29 @@ export default function TestScreen({navigation}) {
                 <TouchableOpacity>
                     <Text style={styles.searchButton} onPress={handleSearch}>Zoek</Text>
                 </TouchableOpacity>
+                {searchActive && (
+                    <TouchableOpacity onPress={() => {
+                        setSearchText('');
+                        setSearchResults([]);
+                        setSearchActive(false);
+                    }}>
+                        <Text style={styles.removeSearchButton}>Wis zoeken</Text>
+                    </TouchableOpacity>
+                )}
             </View>
 
             {/* Plant List */}
-        <FlatList
-            contentContainerStyle={styles.container}
-            data={flatData}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderItem}
-            onEndReached={() => fetchPlants(page)}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={loading ? <ActivityIndicator size="large" color="#2d4423"/> : null}
-        />
+            <FlatList
+                contentContainerStyle={styles.container}
+                data={searchActive ? searchResults : Object.values(plantData)}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderItem}
+                onEndReached={() => {
+                    if (!searchActive) fetchPlants(page);
+                }}
+                onEndReachedThreshold={0.5}
+                ListFooterComponent={loading ? <ActivityIndicator size="large" color="#2d4423"/> : null}
+            />
         </View>
     );
 }
@@ -282,6 +334,11 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
     },
     searchButton: {
+        fontSize: 16,
+        color: '#2d4423',
+        fontWeight: '600',
+    },
+    removeSearchButton: {
         fontSize: 16,
         color: '#2d4423',
         fontWeight: '600',

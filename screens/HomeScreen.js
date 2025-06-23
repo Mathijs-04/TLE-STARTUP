@@ -9,7 +9,6 @@ import {
     SafeAreaView,
     Image,
 } from 'react-native';
-import { Entypo, FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -55,7 +54,7 @@ const QuickAccessButton = ({ IconComponent, title, onPress }) => (
         <View style={styles.quickAccessIcon}>
             <IconComponent fill="#FFFFFF" />
         </View>
-        <Text style={styles.quickAccessText}>{title}</Text>
+        <Text style={styles.quickAccessText} numberOfLines={1}>{title}</Text>
     </TouchableOpacity>
 );
 
@@ -79,7 +78,7 @@ const Homepage = ({ navigation }) => {
                     }
                     const g = JSON.parse(value);
                     const total = g.rows * g.cols;
-                    const green = g.data.filter(i=> ['G','H','F','B'].includes(i.split('.')[2])).length;
+                    const green = g.data.filter(i=> ['G','H','F','B', 'R', 'A'].includes(i.split('.')[2])).length;
                     const percent = total===0?0:Math.round((green/total)*100);
                     const co2 = green * 0.06;
                     setGardenInfo({ size: total, greenPercent: percent, co2PerYear: co2 });
@@ -95,7 +94,7 @@ const Homepage = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-                <Text style={styles.welcomeText}>Welkom, User</Text>
+                <Text style={styles.welcomeText}>Welkom op de Blije Bij</Text>
 
                 <View style={styles.sectionHeader}>
                     <Text style={styles.sectionTitle}>Jouw tuin:</Text>
@@ -107,7 +106,7 @@ const Homepage = ({ navigation }) => {
 
                 </View>
 
-                <View style={styles.gardenCard}>
+                <TouchableOpacity style={styles.gardenCard} onPress={() => navigation.navigate('StatsScreen')}>
                     <View style={styles.gardenInfo}>
                         <Text style={styles.gardenTitle}>Tuin statistieken</Text>
                         <Text style={styles.gardenLabel}>Oppervlakte:</Text>
@@ -121,7 +120,7 @@ const Homepage = ({ navigation }) => {
                         <GardenGrid />
                         {/*<Ionicons name="chevron-forward" size={24} color="#9CA3AF" style={styles.chevron} />*/}
                     </View>
-                </View>
+                </TouchableOpacity>
 
                 <Text style={styles.quickAccessTitle}>Snel naar:</Text>
                 <View style={styles.quickAccessContainer}>
@@ -190,7 +189,7 @@ const styles = StyleSheet.create({
         shadowColor:'#000', shadowOffset:{width:0,height:2}, shadowOpacity:0.1, shadowRadius:4, elevation:3
     },
     quickAccessIcon:{ width:60,height:60,borderRadius:30,backgroundColor:'#455736',justifyContent:'center',alignItems:'center',marginBottom:8 },
-    quickAccessText:{ fontSize:13, color:'#1F2937', textAlign:'center' },
+    quickAccessText:{ fontSize:13, color:'#1F2937', textAlign:'center',  flexShrink: 1, includeFontPadding: false, whiteSpace: 'nowrap'},
 
     tipCard:{
         backgroundColor:'#FFF',borderRadius:30,padding:20,marginBottom:100,
