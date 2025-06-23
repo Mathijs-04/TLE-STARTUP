@@ -57,7 +57,6 @@ function SunButton() {
 function MainTabs() {
     return (
         <View style={{ flex: 1 }}>
-            {/* The floating sun button */}
             <SunButton />
 
             <Tab.Navigator
@@ -137,7 +136,7 @@ export default function AppNavigator() {
         <NavigationContainer theme={MyTheme}>
             <Stack.Navigator>
                 <Stack.Screen
-                    name="MainTabs"
+                    name="Terug"
                     component={MainTabs}
                     options={{ headerShown: false }}
                 />
