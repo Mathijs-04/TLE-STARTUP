@@ -261,10 +261,7 @@ export default function StatsScreen({navigation}) {
                 <Text numberOfLines={3} style={styles.plantText}>{item.planttext}</Text>
                 <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate('Encyclopedia', {
-                            screen: 'PlantDetails',
-                            params: { plant: item }
-                        });
+                        navigation.navigate('PlantDetails', { plant: item });
                     }}
                 >
                     <Text style={styles.readMore}>Lees meer…</Text>
