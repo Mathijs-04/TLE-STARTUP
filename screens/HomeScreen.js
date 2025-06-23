@@ -9,7 +9,6 @@ import {
     SafeAreaView,
     Image,
 } from 'react-native';
-import { Entypo, FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -17,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import AddIcon from './iconComponents/CustomPlusIcon';
 import BookIcon from './iconComponents/OpenBookIcon';
 import WaterIcon from './iconComponents/WaterdropIcon';
+import Garden from "./GardenScreen";
 
 const GardenGrid = () => {
     const gridData = [
@@ -54,7 +54,7 @@ const QuickAccessButton = ({ IconComponent, title, onPress }) => (
         <View style={styles.quickAccessIcon}>
             <IconComponent fill="#FFFFFF" />
         </View>
-        <Text style={styles.quickAccessText}>{title}</Text>
+        <Text style={styles.quickAccessText} numberOfLines={1}>{title}</Text>
     </TouchableOpacity>
 );
 
@@ -94,7 +94,7 @@ const Homepage = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-                <Text style={styles.welcomeText}>Welkom, User</Text>
+                <Text style={styles.welcomeText}>Welkom op de Blije Bij</Text>
 
                 <View style={styles.sectionHeader}>
                     <Text style={styles.sectionTitle}>Jouw tuin:</Text>
@@ -118,10 +118,28 @@ const Homepage = ({ navigation }) => {
 
                 <Text style={styles.quickAccessTitle}>Snel naar:</Text>
                 <View style={styles.quickAccessContainer}>
-                    <QuickAccessButton IconComponent={AddIcon} title="Nieuwe tuin" onPress={()=>navigation.navigate('Garden')}/>
-                    <QuickAccessButton IconComponent={BookIcon} title="Encyclopedie" onPress={()=>navigation.navigate('Encyclopedia')}/>
-                    <QuickAccessButton IconComponent={WaterIcon} title="ECO Tips" onPress={()=>navigation.navigate('EcoTips')}/>
+                    {/* Navigate to Garden main screen */}
+                    <QuickAccessButton
+                        IconComponent={AddIcon}
+                        title="Nieuwe tuin"
+                        onPress={() => navigation.navigate('Garden', { screen: 'Instellingen' })}
+                    />
+
+                    {/* Navigate to Encyclopedia main screen */}
+                    <QuickAccessButton
+                        IconComponent={BookIcon}
+                        title="Encyclopedie"
+                        onPress={() => navigation.navigate('Encyclopedia', { screen: 'EncyclopediaMain' })}
+                    />
+
+                    {/* Navigate to EcoTips screen inside HomeStack */}
+                    <QuickAccessButton
+                        IconComponent={WaterIcon}
+                        title="ECO Tips"
+                        onPress={() => navigation.navigate('Home', { screen: 'EcoTips' })}
+                    />
                 </View>
+
 
                 <Text style={styles.quickAccessTitle}>Tip:</Text>
                 <View style={styles.tipCard}>
@@ -183,7 +201,7 @@ const styles = StyleSheet.create({
         shadowColor:'#000', shadowOffset:{width:0,height:2}, shadowOpacity:0.1, shadowRadius:4, elevation:3
     },
     quickAccessIcon:{ width:60,height:60,borderRadius:30,backgroundColor:'#455736',justifyContent:'center',alignItems:'center',marginBottom:8 },
-    quickAccessText:{ fontSize:13, color:'#1F2937', textAlign:'center' },
+    quickAccessText:{ fontSize:13, color:'#1F2937', textAlign:'center',  flexShrink: 1, includeFontPadding: false, whiteSpace: 'nowrap'},
 
     tipCard:{
         backgroundColor:'#FFF',borderRadius:30,padding:20,marginBottom:100,

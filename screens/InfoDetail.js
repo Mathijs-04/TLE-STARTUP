@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Linking } 
 import Sun from './iconComponents/SunIcon';
 import HalfSunIcon from "./iconComponents/HalfSunIcon";
 import ShadowIcon from "./iconComponents/ShadowIcon";
+import Clay from "../assets/soilTypes/clay.png";
 
 export default function PlantDetails({navigation, route}) {
 
@@ -90,9 +91,9 @@ export default function PlantDetails({navigation, route}) {
                 <Text style={styles.sectionTitleLarge}>Grond vereisten</Text>
                 <View style={styles.soilRow}>
                     {[
-                        { id: 3, label: 'Klei', image: Clay },
                         { id: 1, label: 'Kalk', image: Chalk },
                         { id: 2, label: 'Leem', image: Loam },
+                        { id: 3, label: 'Klei', image: Clay },
                         { id: 4, label: 'Zand', image: Sand },
                     ].map((soil, idx) => (
                         plant.soilrequirements.includes(soil.id) && (
