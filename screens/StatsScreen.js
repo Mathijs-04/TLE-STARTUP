@@ -289,7 +289,7 @@ export default function StatsScreen({navigation}) {
                         style={styles.value}>{gardenInfo.co2PerYear.toFixed(2)} kg</Text></Text>
                 </View>
             </View>
-            <View style={styles.container}>
+            <View style={styles.recomendationsContainer}>
                 <Text style={styles.header}>Aanbevolen planten:</Text>
                 {loading ? (
                     <ActivityIndicator size="large" color="#2d4423" />
@@ -311,13 +311,33 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 16,
         padding: 20,
-        margin: 20,
+        marginTop: 20,
+        marginBottom: 20,
+        marginLeft: 20,
+        marginRight: 20,
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 4,
     },
+
+    recomendationsContainer:{
+        backgroundColor: 'white',
+        borderRadius: 16,
+        padding: 20,
+        marginTop: 0,
+        marginBottom: 20,
+        marginLeft: 20,
+        marginRight: 20,
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 4,
+        height: '60%',
+    },
+
     header: {
         fontSize: 20,
         fontWeight: 'bold',
