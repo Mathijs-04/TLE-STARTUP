@@ -36,7 +36,8 @@ Also includes eco tips for a more sustainable garden.
 View more info about a specific plant by tapping on it.  
 
 
-**Eco tips** Get useful sustainability tips to reduce water usage, boost biodiversity, and support pollinators in your garden.
+**Eco tips** 
+Get useful sustainability tips to reduce water usage, boost biodiversity, and support pollinators in your garden.
 
 
 
