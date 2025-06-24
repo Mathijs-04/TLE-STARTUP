@@ -44,7 +44,7 @@ Get useful sustainability tips to reduce water usage, boost biodiversity, and su
 
 ## Notes
 
-- Make sure the [Plant Data API](https://github.com/SEVerhaak/plant-data-api) is running locally on port 3000.
+- Make sure the [Plant Data API] (https://github.com/SEVerhaak/TLE-2.2-Plant-Data-API) is running locally on port 3000.
 - You can configure the API base URL in a `.env` file at the root of the project:  
 ```env
 API_URL=http://127.0.0.1:3000
