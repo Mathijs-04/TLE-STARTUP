@@ -266,18 +266,6 @@ export default function Garden({navigation}) {
                         />
                     </View>
 
-                    <TouchableOpacity
-                        style={styles.rightNavButton}
-                        onPress={() => {
-                            if (grid.length > 0) {
-                                saveGarden();
-                            }
-                            navigation.navigate('FormScreen');
-                        }}
-                    >
-                        <RightArrowIcon width={34} height={34} fill="#455736" />
-                    </TouchableOpacity>
-
                     <View style={styles.actionRow}>
                         <TouchableOpacity
                             style={[styles.toolButton, mode === 'eraser' && styles.activeTool]}

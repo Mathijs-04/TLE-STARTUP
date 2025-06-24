@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Linking } from 'react-native';
 import Sun from './iconComponents/SunIcon';
 import HalfSunIcon from "./iconComponents/HalfSunIcon";
 import ShadowIcon from "./iconComponents/ShadowIcon";
@@ -14,20 +14,23 @@ export default function PlantDetails({navigation, route}) {
     const Loam = require('../assets/soilTypes/loam.png');
     const Sand = require('../assets/soilTypes/sand.png');
 
+    const handleIntratuinPress = () => {
+        const searchQuery = encodeURIComponent(plant.title.trim().toLowerCase().replace(/\s+/g, '+'));
+        const url = `https://www.intratuin.nl/catalogsearch/result/index?q=${searchQuery}`;
+        Linking.openURL(url);
+    };
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            {/* Title */}
             <Text style={styles.title}>{plant.title}</Text>
 
-            {/* Main card */}
             <View style={styles.card}>
-                {/* Circle image in top right */}
                 <View style={styles.imageCircle}>
                     <Image
                         source={{uri: plant.imageUrl2}}
                         style={styles.blurredImage}
                         resizeMode="contain"
-                        blurRadius={7} // This adds the blur
+                        blurRadius={7}
                     />
                     <Image
                         source={{uri: plant.imageUrl2}}
@@ -144,7 +147,9 @@ export default function PlantDetails({navigation, route}) {
                     </>
                 ) : null}
 
-
+                <TouchableOpacity style={styles.intratuinButton} onPress={handleIntratuinPress}>
+                    <Text style={styles.intratuinButtonText}>Bekijk op Intratuin</Text>
+                </TouchableOpacity>
                 {/* Back button */}
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <Text style={styles.backButtonText}>Terug</Text>
@@ -159,12 +164,26 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingHorizontal: 20,
         backgroundColor: '#fff',
+        paddingBottom: 100,
     },
+
     title: {
         fontSize: 32,
         fontWeight: '700',
         marginBottom: 20,
         fontFamily: 'serif',
+    },
+    intratuinButton: {
+        backgroundColor: '#8DB600',
+        marginTop: 10,
+        paddingVertical: 10,
+        borderRadius: 30,
+        alignItems: 'center',
+    },
+    intratuinButtonText: {
+        color: '#fff',
+        fontWeight: '600',
+        fontSize: 16,
     },
     card: {
         backgroundColor: '#fff',

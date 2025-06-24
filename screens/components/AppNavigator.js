@@ -34,9 +34,10 @@ function HomeStack() {
 function GardenStack() {
     return (
         <Stack.Navigator>
-            <Stack.Screen name="GardenScreen" component={GardenScreen} options={{ title: 'Jouw tuin' }} />
-            <Stack.Screen name="FormScreen" component={FormScreen} />
+            <Stack.Screen name="FormScreen" component={FormScreen} options={{title: 'Instellingen'}} />
+            <Stack.Screen name="GardenScreen" component={GardenScreen} options={{ title: 'Garden' }} />
             <Stack.Screen name="StatsScreen" component={StatsScreen} />
+            <Stack.Screen name="PlantDetails" component={PlantDetails} />
             <Stack.Screen name="EcoTips" component={EcotipsScreen} options={{ title: 'Eco Tips' }} />
         </Stack.Navigator>
     );
