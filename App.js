@@ -1,6 +1,7 @@
 import React from 'react';
-import Navbar from './screens/components/Navbar';
+import AppNavigator from './screens/components/AppNavigator';
 
 export default function App() {
-    return <Navbar />;
+    return <AppNavigator/>
 }
+

@@ -1,0 +1,19 @@
+import React from 'react';
+import Svg, { Path } from 'react-native-svg';
+
+const BirdIcon = ({ width = 35.604, height = 27.293, color = '#000' }) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={width}
+        height={height}
+        viewBox="0 0 35.604 27.293"
+    >
+        <Path
+            d="M37.6,16.651l-5.171-1.815A6.374,6.374,0,0,0,30.89,11.93a7.384,7.384,0,0,0-10.054,0l-2.509,2.377L7.086,3A20.179,20.179,0,0,0,11.24,21.02L2,29.5s15.072,3.212,23.855-3.292c4.679-3.469,5.731-5.493,6.392-7.629L37.6,16.651M28.635,17a1.777,1.777,0,0,1-2.408,0,1.541,1.541,0,0,1,0-2.265,1.777,1.777,0,0,1,2.408,0A1.541,1.541,0,0,1,28.635,17Z"
+            transform="translate(-2 -3)"
+            fill={color}
+        />
+    </Svg>
+);
+
+export default BirdIcon;
