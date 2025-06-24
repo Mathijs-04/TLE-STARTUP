@@ -16,6 +16,9 @@ import PlantDetails from "../InfoDetail";
 import EncyclopediaPage from "../EncyclopediaPage";
 import EcotipsScreen from "../EcotipsScreen";
 import StatsScreen from "../StatsScreen";
+import MyGardens from '../MyGardens';
+
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -27,6 +30,7 @@ function HomeStack() {
             <Stack.Screen name="FormScreen" component={FormScreen} />
             <Stack.Screen name="StatsScreen" component={StatsScreen} />
             <Stack.Screen name="EcoTips" component={EcotipsScreen} options={{ title: 'Eco Tips' }} />
+            <Stack.Screen name="MyGardens" component={MyGardens} options={{ title: 'Mijn Tuinen' }} />
         </Stack.Navigator>
     );
 }
@@ -39,6 +43,7 @@ function GardenStack() {
             <Stack.Screen name="StatsScreen" component={StatsScreen} />
             <Stack.Screen name="PlantDetails" component={PlantDetails} />
             <Stack.Screen name="EcoTips" component={EcotipsScreen} options={{ title: 'Eco Tips' }} />
+            <Stack.Screen name="MyGardens" component={MyGardens} options={{ title: 'Mijn Tuinen' }} />
         </Stack.Navigator>
     );
 }
@@ -136,6 +141,9 @@ export default function AppNavigator() {
                             ),
                         }}
                     />
+
+
+
 
                 </Tab.Navigator>
                 <SunButton />

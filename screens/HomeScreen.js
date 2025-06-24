@@ -112,6 +112,10 @@ const Homepage = ({navigation}) => {
                     <Text style={styles.sectionTitle}>Jouw tuin:</Text>
                 </View>
 
+                <TouchableOpacity onPress={() => navigation.navigate('MyGardens')}>
+                    <Text style={styles.moreLink}>Alle tuinen...</Text>
+                </TouchableOpacity>
+
                 {hasGarden ? (
                     <TouchableOpacity style={styles.gardenCard} onPress={() => navigation.navigate('StatsScreen')}>
                         <View style={styles.gardenInfo}>
