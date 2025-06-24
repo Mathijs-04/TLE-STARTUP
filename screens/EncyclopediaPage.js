@@ -131,25 +131,41 @@ export default function TestScreen({navigation}) {
                 'id',
             ];
 
+            const capitalizeWords = (str) => {
+                if (typeof str !== 'string') return str;
+                return str
+                    .split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
+            };
+
+            const fieldsToCapitalize = ['title', 'botanicalname', 'commonname', 'othername'];
+
             const simplified = {};
             for (const plantId in plants) {
                 const plant = plants[plantId];
                 simplified[plantId] = {};
 
                 keysToKeep.forEach((key) => {
-                    simplified[plantId][key] = plant[key];
+                    let value = plant[key];
+
+                    // Capitalize specific fields
+                    if (fieldsToCapitalize.includes(key) && typeof value === 'string') {
+                        value = capitalizeWords(value);
+                    }
+
+                    simplified[plantId][key] = value;
                 });
             }
 
-            const imageRes = await fetch(`http://${url}:${port}/plants/url/all`,
-                {
-                    method: 'GET',
-                    headers: {
-                        Accept: 'application/json',
-                    },
-                });
-            const imageData = await imageRes.json();
+            const imageRes = await fetch(`http://${url}:${port}/plants/url/all`, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                },
+            });
 
+            const imageData = await imageRes.json();
 
             for (const plantId in imageData) {
                 if (simplified[plantId]) {
@@ -173,10 +189,6 @@ export default function TestScreen({navigation}) {
             setLoading(false);
         }
     }, [loading, hasMore]);
-
-    useEffect(() => {
-        fetchPlants(INITIAL_PAGE);
-    }, []);
 
 
     const renderItem = ({item}) => (
