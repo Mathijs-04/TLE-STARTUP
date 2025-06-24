@@ -17,7 +17,29 @@ import AddIcon from './iconComponents/CustomPlusIcon';
 import BookIcon from './iconComponents/OpenBookIcon';
 import WaterIcon from './iconComponents/WaterdropIcon';
 import Garden from "./GardenScreen";
-
+const tips = [
+    {
+         text: 'Wist je dat je regenwater het beste vroeg in de ochtend kunt gebruiken? Zo verdampt er minder water én krijgen je planten optimaal vocht.',
+    },
+    {
+        text: 'Gooi groente- en fruitresten op de composthoop om je tuin op natuurlijke wijze te voeden.',
+    },
+    {
+        text: 'Een laagje mulch helpt vocht vast te houden en onkruid tegen te gaan.',
+    },
+    {
+        text: 'Inheemse planten zijn beter aangepast aan het klimaat en hebben minder verzorging nodig.',
+    },
+    {
+        text: 'Geef liever minder vaak maar dieper water zodat wortels sterker groeien.',
+    },
+    {
+        text: 'Plant bloemen zoals lavendel en zonnebloemen om bijen aan te trekken.',
+    },
+    {
+        text: 'Kokend water over onkruid gieten is een milieuvriendelijke manier om het weg te krijgen.',
+    }
+];
 const GardenGrid = () => {
     const gridData = [
         ['gray', 'yellow', 'yellow', 'yellow'],
@@ -65,6 +87,8 @@ const QuickAccessButton = ({IconComponent, title, onPress}) => (
 const Homepage = ({navigation}) => {
     const [gardenInfo, setGardenInfo] = useState({size: 0, greenPercent: 0, co2PerYear: 0});
     const [hasGarden, setHasGarden] = useState(false);
+    const dayIndex = new Date().getDay();
+    const tip = tips[dayIndex % tips.length];
 
     useFocusEffect(
         useCallback(() => {
@@ -172,10 +196,7 @@ const Homepage = ({navigation}) => {
                 <View style={styles.tipCard}>
                     <View style={styles.tipContent}>
                         <Text style={styles.tipTitle}>Tuinier tip van de dag!</Text>
-                        <Text style={styles.tipText}>
-                            Wist je dat je regenwater het beste vroeg in de ochtend kunt gebruiken?
-                            Zo verdampt er minder water én krijgen je planten optimaal vocht.
-                        </Text>
+                        <Text style={styles.tipText}>{tip.text}</Text>
                         <TouchableOpacity onPress={() => navigation.navigate('EcoTips')}>
                             <Text style={styles.readMoreLink}>Lees meer...</Text>
                         </TouchableOpacity>
