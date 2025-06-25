@@ -20,25 +20,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 
 
-const deleteAllGardens = async () => {
-    try {
-        const keys = await AsyncStorage.getAllKeys();
-        const gardenKeys = keys.filter(k => k.startsWith('garden_'));
 
-        if (gardenKeys.length === 0) {
-            Alert.alert('Geen tuinen om te verwijderen');
-            return;
-        }
-
-        await AsyncStorage.multiRemove(gardenKeys);
-
-        Alert.alert('Alle tuinen zijn verwijderd!');
-        setSavedGardens([]); // Vergeet niet je state te updaten
-    } catch (error) {
-        console.error('Fout bij verwijderen van tuinen:', error);
-        Alert.alert('Er is iets misgegaan bij het verwijderen.');
-    }
-};
 
 const GardenGrid = ({ gridData, size = 'small' }) => {
     const getColor = (color) => {
