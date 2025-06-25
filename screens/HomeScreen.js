@@ -19,7 +19,7 @@ import WaterIcon from './iconComponents/WaterdropIcon';
 import Garden from "./GardenScreen";
 const tips = [
     {
-         text: 'Wist je dat je regenwater het beste vroeg in de ochtend kunt gebruiken? Zo verdampt er minder water én krijgen je planten optimaal vocht.',
+        text: 'Wist je dat je regenwater het beste vroeg in de ochtend kunt gebruiken? Zo verdampt er minder water én krijgen je planten optimaal vocht.',
     },
     {
         text: 'Gooi groente- en fruitresten op de composthoop om je tuin op natuurlijke wijze te voeden.',
@@ -132,13 +132,14 @@ const Homepage = ({navigation}) => {
             <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
                 <Text style={styles.welcomeText}>Welkom op de Blije Bij</Text>
 
-                <View style={styles.sectionHeader}>
+                <View style={[styles.sectionHeader, { marginBottom: 20 }]}>
                     <Text style={styles.sectionTitle}>Jouw tuin:</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('MyGardens')}>
+                        <Text style={styles.moreLink}>Alle tuinen...</Text>
+                    </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity onPress={() => navigation.navigate('MyGardens')}>
-                    <Text style={styles.moreLink}>Alle tuinen...</Text>
-                </TouchableOpacity>
+
 
                 {hasGarden ? (
                     <TouchableOpacity style={styles.gardenCard} onPress={() => navigation.navigate('StatsScreen')}>
@@ -221,8 +222,11 @@ const styles = StyleSheet.create({
         marginTop: 30, fontSize: 32, fontWeight: 'bold', color: '#1F2937', marginBottom: 30
     },
     sectionHeader: {
-        flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
+
     sectionTitle: {fontSize: 18, fontWeight: '600', color: '#1F2937'},
     moreLink: {fontSize: 16, color: '#6B7280', textDecorationLine: 'underline'},
 
