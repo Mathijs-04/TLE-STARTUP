@@ -237,14 +237,17 @@ const MyGardens = () => {
                 </View>
 
                 <View style={styles.gardensList}>
-                    {sortedGardens.map((g, idx) => (
-                        <GardenCard
-                            key={idx}
-                            {...g}
-                            onPress={() => console.log(`${g.title} pressed`)}
-                            onDelete={() => deleteGarden(g.key)}
-                        />
-                    ))}
+                    {sortedGardens.map((g) => {
+                        const { key, ...rest } = g;
+                        return (
+                            <GardenCard
+                                key={key}
+                                {...rest}
+                                onPress={() => console.log(`${g.title} pressed`)}
+                                onDelete={() => deleteGarden(key)}
+                            />
+                        );
+                    })}
                 </View>
             </ScrollView>
 
