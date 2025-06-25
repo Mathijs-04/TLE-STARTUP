@@ -12,7 +12,7 @@ export default function StatsScreen({navigation}) {
 
     const url = process.env.EXPO_PUBLIC_API_URL;
     const port = process.env.EXPO_PUBLIC_API_PORT;
-    const PAGE_LIMIT = 10; // fixed limit
+    const PAGE_LIMIT = 25; // fixed limit
 
     const STORAGE_KEYS = {
         lighting: 'form_lighting',
@@ -172,15 +172,12 @@ export default function StatsScreen({navigation}) {
                     const plantLightingIds = parseIds(plant.lightrequirements);
                     const plantPollinatorIds = parseIds(plant.pollinators);
 
-                    // Soil match count
                     const soilMatchCount = selectedSoilTypeIds.length > 0
                         ? plantSoilIds.filter(id => selectedSoilTypeIds.includes(id)).length
                         : 0;
 
-                    // Lighting match 1 or 0
                     const lightingMatchCount = selectedLightingId && plantLightingIds.includes(selectedLightingId) ? 1 : 0;
 
-                    // Pollinator match 1 or 0
                     const pollinatorMatchCount = pollinatorIdsToUse.length > 0
                         ? plantPollinatorIds.some(id => pollinatorIdsToUse.includes(id)) ? 1 : 0
                         : 0;
@@ -200,13 +197,15 @@ export default function StatsScreen({navigation}) {
                     filtered.push(simplePlant);
                 }
 
-                // Sort by total matches desc, then soil match desc
+                // Sort first
                 filtered.sort((a, b) => {
                     if (b.matchCount !== a.matchCount) return b.matchCount - a.matchCount;
                     return b.soilMatchCount - a.soilMatchCount;
                 });
 
-                return filtered;
+                // Now apply grouping and shuffling
+                const groupedAndShuffled = groupAndShuffle(filtered);
+                return groupedAndShuffled;
             }
 
             // 1st try: strict pollinator IDs
@@ -220,6 +219,38 @@ export default function StatsScreen({navigation}) {
             // Optionally do the same fallback logic for soil or lighting filters if you want
 
             const limitedPlants = filteredPlants.slice(0, PAGE_LIMIT);
+
+            function shuffleArray(array) {
+                return array
+                    .map(value => ({ value, sort: Math.random() }))
+                    .sort((a, b) => a.sort - b.sort)
+                    .map(({ value }) => value);
+            }
+
+            function groupAndShuffle(filtered) {
+                // Group plants by matchCount
+                const groups = {};
+                filtered.forEach(plant => {
+                    if (!groups[plant.matchCount]) {
+                        groups[plant.matchCount] = [];
+                    }
+                    groups[plant.matchCount].push(plant);
+                });
+
+                // Sort groups by matchCount descending
+                const sortedMatchCounts = Object.keys(groups)
+                    .map(Number)
+                    .sort((a, b) => b - a);
+
+                // Shuffle within each group and flatten
+                const result = [];
+                sortedMatchCounts.forEach(matchCount => {
+                    const shuffledGroup = shuffleArray(groups[matchCount]);
+                    result.push(...shuffledGroup);
+                });
+
+                return result;
+            }
 
             const imageRes = await fetch(`http://${url}:${port}/plants/url/all`, {
                 method: 'GET',
