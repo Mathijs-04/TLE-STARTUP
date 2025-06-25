@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import { DefaultTheme, NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -66,27 +66,11 @@ function SunButton() {
             onPress={() => navigation.navigate('EcoTips')}
             activeOpacity={0.7}
         >
-            <Svg
-                width={36}
-                height={36}
-                viewBox="0 0 24 24"
-                stroke="#000"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
+            <Image
+                source={require('...')}
                 style={styles.sunIcon}
-            >
-                <Circle cx="12" cy="12" r="5" />
-                <Line x1="12" y1="1" x2="12" y2="3" />
-                <Line x1="12" y1="21" x2="12" y2="23" />
-                <Line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                <Line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                <Line x1="1" y1="12" x2="3" y2="12" />
-                <Line x1="21" y1="12" x2="23" y2="12" />
-                <Line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                <Line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-            </Svg>
+                resizeMode="contain"
+            />
         </TouchableOpacity>
     );
 }
@@ -222,6 +206,8 @@ const styles = StyleSheet.create({
         zIndex: 999,
     },
     sunIcon: {
+        width: 20,
+        height: 20,
         marginLeft: 25,
     },
 });
